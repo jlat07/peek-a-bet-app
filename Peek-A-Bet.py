@@ -31,8 +31,8 @@ bet_types = ['Spread', 'Over/Under']
 spread_values = list(range(-10, 11))  # for simplicity, using -10 to +10 as spreads
 
 # Temporary storage for match-ups and bets in the current ticket
-temp_matchups = []
-temp_bets = []
+# temp_matchups = []
+# temp_bets = []
 
 
 def get_user_input(weeks, teams, bet_types, spread_values):
@@ -47,6 +47,13 @@ def get_user_input(weeks, teams, bet_types, spread_values):
         over_under_value = st.number_input('Enter Over/Under Value', value=50.0)
     
     return selected_week, selected_team, selected_bet_type, selected_spread, over_under_value
+
+# Check if user input is already in session state
+if "user_input" not in st.session_state:
+    st.session_state.user_input = get_user_input(weeks, teams, bet_types, spread_values)
+
+selected_week, selected_team, selected_bet_type, selected_spread, over_under_value = st.session_state.user_input
+
 
 
 if st.button("Add Match-up"):
@@ -90,4 +97,8 @@ with st.container():
         for ticket_id in ticket_manager.get_all_tickets():
             new_position = st.selectbox(f'Position for {ticket_id}', list(range(1, len(ticket_manager.get_all_tickets())+1)), index=ticket_manager.ticket_order.index(ticket_id))
             ticket_manager.change_ticket_order(ticket_id, new_position-1)
+
+if st.button("Reset Input"):
+    if "user_input" in st.session_state:
+        del st.session_state.user_input
 
