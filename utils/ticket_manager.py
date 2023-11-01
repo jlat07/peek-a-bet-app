@@ -20,6 +20,10 @@ class TicketManager:
         self.next_ticket_id = 1
         self.ticket_order = []  # To keep track of ticket order
 
+    def get_all_tickets(self):
+        return list(self.tickets.keys())
+
+
     def add_ticket(self, matchups, bets):
         ticket = Ticket(self.next_ticket_id, matchups, bets)
         self.tickets[self.next_ticket_id] = ticket
