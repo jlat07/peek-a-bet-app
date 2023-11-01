@@ -1,10 +1,21 @@
 import streamlit as st
 from utils.ticket_manager import TicketManager
 
+# Initialize Ticket Manager
+ticket_manager = TicketManager()
 
-## 
+# Global Constants/Variables Initialization
+matchup_mapping = {
+    'Week 1': {'Team A': 'Team B', 'Team C': 'Team D'},
+    'Week 2': {'Team A': 'Team C', 'Team B': 'Team D'},
+}
 
-# 1. Define the get_user_input function
+weeks = ['Week 1', 'Week 2', 'Week 3']
+teams = ['Team A', 'Team B', 'Team C', 'Team D']
+bet_types = ['Spread', 'Over/Under']
+spread_values = list(range(-10, 11))
+
+# User Input Function
 def get_user_input(weeks, teams, bet_types, spread_values):
     selected_week = st.selectbox('Select Week', weeks, key='select_week_key')
     selected_team = st.selectbox('Select Team', teams, key='select_team_key')
@@ -12,28 +23,17 @@ def get_user_input(weeks, teams, bet_types, spread_values):
     selected_spread = None
     over_under_value = None
     if selected_bet_type == 'Spread':
-        selected_spread = st.number_input('Select Spread', value=-7.0)
+        selected_spread = st.selectbox('Select Spread', spread_values, key='select_spread_values_key')
     else:
         over_under_value = st.number_input('Enter Over/Under Value', value=50.0)
     
     return selected_week, selected_team, selected_bet_type, selected_spread, over_under_value
 
-# 2. Use the get_user_input function in session state
+# Check if user input is in session state
 if "user_input" not in st.session_state:
     st.session_state.user_input = get_user_input(weeks, teams, bet_types, spread_values)
 
 selected_week, selected_team, selected_bet_type, selected_spread, over_under_value = st.session_state.user_input
-
-
-# Initialize Ticket Manager
-ticket_manager = TicketManager()
-
-st.title("Peek-A-Bet")
-
-# Display Total potential win
-total_win = len(ticket_manager.get_all_tickets()) * 100
-st.write(f"Total potential win amount: ${total_win}")
-
 
 # Initialize the session state variables if they don't exist
 if 'temp_matchups' not in st.session_state:
@@ -42,26 +42,8 @@ if 'temp_matchups' not in st.session_state:
 if 'temp_bets' not in st.session_state:
     st.session_state.temp_bets = []
 
-# This is a simplified mapping for demonstration. Enhance based on real data.
-matchup_mapping = {
-    'Week 1': {'Team A': 'Team B', 'Team C': 'Team D'},
-    'Week 2': {'Team A': 'Team C', 'Team B': 'Team D'},
-    # ... add more weeks as needed
-}
-
-weeks = ['Week 1', 'Week 2', 'Week 3']
-teams = ['Team A', 'Team B', 'Team C', 'Team D']
-bet_types = ['Spread', 'Over/Under']
-spread_values = list(range(-10, 11))  # for simplicity, using -10 to +10 as spreads
-
-# Temporary storage for match-ups and bets in the current ticket
-# temp_matchups = []
-# temp_bets = []
-
-##----------BUTTONS--------
-
+# Add Match-up Logic
 if st.button("Add Match-up"):
-    # Use session state variables instead of the local ones
     opponent = matchup_mapping[selected_week].get(selected_team, "Unknown")
     st.session_state.temp_matchups.append(f"{selected_team} vs {opponent}")
     st.session_state.temp_bets.append({
@@ -69,20 +51,18 @@ if st.button("Add Match-up"):
         'value': selected_spread if selected_bet_type == 'Spread' else over_under_value
     })
 
-if st.button("Finalize Ticket"):
-    ticket_manager.add_ticket(st.session_state.temp_matchups, st.session_state.temp_bets)
-    # Clear the session state variables
-    st.session_state.temp_matchups.clear()
-    st.session_state.temp_bets.clear()
-
-
-# Display current match-ups
+# Display Current Match-ups for New Ticket
 st.subheader("Current Match-ups for New Ticket:")
 for matchup, bet in zip(st.session_state.temp_matchups, st.session_state.temp_bets):
     st.write(f"{matchup} - {bet['type']} {bet['value']}")
 
+# Finalize Ticket Logic
+if st.button("Finalize Ticket"):
+    ticket_manager.add_ticket(st.session_state.temp_matchups, st.session_state.temp_bets)
+    st.session_state.temp_matchups.clear()
+    st.session_state.temp_bets.clear()
 
-# Display Ticket IDs and details
+# Display Tickets
 with st.container():
     col1, col2, col3 = st.columns(3)
     
@@ -102,8 +82,3 @@ with st.container():
         for ticket_id in ticket_manager.get_all_tickets():
             new_position = st.selectbox(f'Position for {ticket_id}', list(range(1, len(ticket_manager.get_all_tickets())+1)), index=ticket_manager.ticket_order.index(ticket_id))
             ticket_manager.change_ticket_order(ticket_id, new_position-1)
-
-if st.button("Reset Input"):
-    if "user_input" in st.session_state:
-        del st.session_state.user_input
-
