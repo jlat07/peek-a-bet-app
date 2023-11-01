@@ -36,8 +36,8 @@ temp_bets = []
 
 
 def get_user_input():
-    selected_week = st.selectbox('Select Week', weeks)
-    selected_team = st.selectbox('Select Team', teams)
+    selected_week = st.selectbox('Select Week', weeks, key='select_week_key')
+    selected_team = st.selectbox('Select Team', teams, key='select_team_key')
     selected_bet_type = st.selectbox('Bet Type', bet_types)
     selected_spread = None
     over_under_value = None
@@ -52,8 +52,8 @@ selected_week, selected_team, selected_bet_type, selected_spread, over_under_val
 
 # Add button to finalize this match-up
 # Collect ticket input
-selected_week = st.selectbox('Select Week', weeks)
-selected_team = st.selectbox('Select Team', teams)
+selected_week = st.selectbox('Select Week', weeks, key='select_week_key')
+selected_team = st.selectbox('Select Team', teams, key='select_team_key')
 # ... [Rest of your code for input collection]
 
 if st.button("Add Match-up"):
