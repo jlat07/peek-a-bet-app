@@ -71,16 +71,16 @@ with st.beta_container():
         st.subheader("Ticket Details")
         for ticket in ticket_manager.ordered_tickets():
             st.markdown(f"**Matchups:** {', '.join(ticket.matchups)}")
-            st.markdown(f"**Bets:** {', '.join([f'{bet['type']} {bet['value']}' for bet in ticket.bets])}")
+            st.markdown(f"**Bets:** {', '.join(['{} {}'.format(bet['type'], bet['value']) for bet in ticket.bets])}")
+
+
 
 
     with col3:
         st.subheader("Organize")
         for ticket_id in ticket_manager.get_all_tickets():
-            new_position = st.selectbox(f'Position for {ticket_id}, list(range(1, len(ticket_manager.get_all_tickets())+1)), index=ticket_manager.ticket_order.index(ticket_id))
+            new_position = st.selectbox(f'Position for {ticket_id}', list(range(1, len(ticket_manager.get_all_tickets())+1)), index=ticket_manager.ticket_order.index(ticket_id))
             ticket_manager.change_ticket_order(ticket_id, new_position-1)
-
-
 
 
 
