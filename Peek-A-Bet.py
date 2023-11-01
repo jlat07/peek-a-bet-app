@@ -6,9 +6,18 @@ from utils.ticket_manager import TicketManager
 # Initialize Ticket Manager
 ticket_manager = TicketManager()
 
+# Title and Introductory UI Elements
 st.title("Peek-A-Bet")
+st.write("Your personal parlay ticket manager!")
 
-\
+# Display Total Wins (Place this code here)
+total_wins = sum(1 for ticket_id, ticket in ticket_manager.tickets.items() if ticket.is_winner())
+st.write(f'Total Winning Tickets: {total_wins}')
+
+# Rest of the code...
+# Display existing tickets, provide controls for adding matchups, deleting tickets, etc.
+
+
 # This is a simplified mapping for demonstration. This should be enhanced based on real data.
 matchup_mapping = {
     'Week 1': {'Team A': 'Team B', 'Team C': 'Team D'},
