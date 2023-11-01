@@ -36,8 +36,8 @@ temp_bets = []
 
 
 def get_user_input(weeks, teams, bet_types, spread_values):
-    selected_week = st.selectbox('Select Week', weeks, key='select_week_key')
-    selected_team = st.selectbox('Select Team', teams, key='select_team_key')
+    # selected_week = st.selectbox('Select Week', weeks, key='select_week_key')
+    # selected_team = st.selectbox('Select Team', teams, key='select_team_key')
     selected_bet_type = st.selectbox('Bet Type', bet_types, key='select_bet_types_key')
     selected_spread = None
     over_under_value = None
