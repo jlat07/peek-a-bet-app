@@ -12,7 +12,7 @@ def get_user_input(weeks, teams, bet_types, spread_values):
     selected_spread = None
     over_under_value = None
     if selected_bet_type == 'Spread':
-        selected_spread = st.selectbox('Select Spread', spread_values, key='select_spread_values_key')
+        selected_spread = st.number_input('Select Spread', value=-7.0)
     else:
         over_under_value = st.number_input('Enter Over/Under Value', value=50.0)
     
