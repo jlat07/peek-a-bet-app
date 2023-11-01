@@ -1,5 +1,7 @@
 import streamlit as st
+from utils.ticket import Ticket
 from utils.ticket_manager import TicketManager
+
 
 # Initialize Ticket Manager
 ticket_manager = TicketManager()
