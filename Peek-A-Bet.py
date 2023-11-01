@@ -22,8 +22,7 @@ spread_values = list(range(-10, 11))  # for simplicity, using -10 to +10 as spre
 temp_matchups = []
 temp_bets = []
 
-# Collect ticket input (Cached for 60 seconds to limit excessive API calls)
-@st.cache(ttl=60)
+
 def get_user_input():
     selected_week = st.selectbox('Select Week', weeks)
     selected_team = st.selectbox('Select Team', teams)
