@@ -25,10 +25,6 @@ if "user_input" not in st.session_state:
 selected_week, selected_team, selected_bet_type, selected_spread, over_under_value = st.session_state.user_input
 
 
-if st.button("Finalize Ticket"):
-    # ... [rest of the button logic]
-
-
 # Initialize Ticket Manager
 ticket_manager = TicketManager()
 
@@ -79,7 +75,7 @@ if st.button("Finalize Ticket"):
     st.session_state.temp_matchups.clear()
     st.session_state.temp_bets.clear()
 
-    
+
 # Display current match-ups
 st.subheader("Current Match-ups for New Ticket:")
 for matchup, bet in zip(st.session_state.temp_matchups, st.session_state.temp_bets):
