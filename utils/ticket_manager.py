@@ -24,16 +24,15 @@ class TicketManager:
         self.next_ticket_id += 1
 
     def change_ticket_order(self, ticket_id, new_position):
-        self.ticket_order.remove(ticket_id)
-        self.ticket_order.insert(new_position, ticket_id)
+        if ticket_id in self.ticket_order:
+            self.ticket_order.remove(ticket_id)
+            self.ticket_order.insert(new_position, ticket_id)
 
     def ordered_tickets(self):
-        return [self.tickets[ticket_id] for ticket_id in self.ticket_order]
-
-    def reorder_ticket(self, ticket_id, new_position):
-        self.ticket_order.remove(ticket_id)
-        self.ticket_order.insert(new_position - 1, ticket_id)  # Convert 1-based index back to 0-based
+        return [self.tickets[ticket_id] for ticket_id in self.ticket_order if ticket_id in self.tickets]
 
     def delete_ticket(self, ticket_id):
-        del self.tickets[ticket_id]
-        self.ticket_order.remove(ticket_id)
+        if ticket_id in self.tickets:
+            del self.tickets[ticket_id]
+        if ticket_id in self.ticket_order:
+            self.ticket_order.remove(ticket_id)
