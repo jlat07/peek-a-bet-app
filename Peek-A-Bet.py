@@ -59,7 +59,7 @@ if st.button("Finalize Ticket"):
 
 #... [existing code]
 
-with st.beta_container():
+with st.container():
     col1, col2, col3 = st.columns(3)
     
     with col1:
