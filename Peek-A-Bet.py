@@ -35,26 +35,21 @@ temp_matchups = []
 temp_bets = []
 
 
-def get_user_input():
+def get_user_input(weeks, teams, bet_types, spread_values):
     selected_week = st.selectbox('Select Week', weeks, key='select_week_key')
     selected_team = st.selectbox('Select Team', teams, key='select_team_key')
-    selected_bet_type = st.selectbox('Bet Type', bet_types, key='bet_types_key')
+    selected_bet_type = st.selectbox('Bet Type', bet_types, key='select_bet_types_key')
     selected_spread = None
     over_under_value = None
     if selected_bet_type == 'Spread':
-        selected_spread = st.selectbox('Select Spread', spread_values, key='spread_values_key')
+        selected_spread = st.selectbox('Select Spread', spread_values, key='select_spread_values_key')
     else:
         over_under_value = st.number_input('Enter Over/Under Value', value=50.0)
     
     return selected_week, selected_team, selected_bet_type, selected_spread, over_under_value
 
-selected_week, selected_team, selected_bet_type, selected_spread, over_under_value = get_user_input()
+selected_week, selected_team, selected_bet_type, selected_spread, over_under_value = get_user_input(weeks, teams, bet_types, spread_values)
 
-# Add button to finalize this match-up
-# Collect ticket input
-selected_week = st.selectbox('Select Week', weeks, key='select_week_key')
-selected_team = st.selectbox('Select Team', teams, key='select_team_key')
-# ... [Rest of your code for input collection]
 
 if st.button("Add Match-up"):
     # Use session state variables instead of the local ones
