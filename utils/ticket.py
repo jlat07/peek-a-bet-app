@@ -8,32 +8,30 @@ class Ticket:
         bet_str = ', '.join([f"{bet['type']} {bet['value']}" for bet in self.bets])
         return f"Ticket ID: {self.ticket_id}\nMatchups: {', '.join(self.matchups)}\nBets: {bet_str}"
 
-class TicketManager:
-    def __init__(self):
-        self.tickets = {}
-        self.next_ticket_id = 1
-        self.ticket_order = []
+    def validate(self):
+        if not self.matchups:
+            raise ValueError("Matchups should not be empty!")
+        if not self.bets:
+            raise ValueError("Bets should not be empty!")
+        # Add other validation rules if necessary
 
-    def get_all_tickets(self):
-        return list(self.tickets.keys())
+    def compute_outcome(self, game_data):
+        for bet in self.bets:
+            bet_type = bet["type"]
+            bet_value = float(bet["value"])
+            
+            if bet_type == "spread":
+                if self.matchups[0] == game_data["team_home"]:
+                    delta = game_data["score_home"] - game_data["score_away"] + bet_value
+                else:
+                    delta = game_data["score_away"] - game_data["score_home"] - bet_value
 
-    def add_ticket(self, matchups, bets):
-        ticket = Ticket(self.next_ticket_id, matchups, bets)
-        self.tickets[self.next_ticket_id] = ticket
-        self.ticket_order.append(self.next_ticket_id)
-        self.next_ticket_id += 1
+                bet["delta"] = delta
+                bet["status"] = "green" if delta > 0 else "red"
 
-    def change_ticket_order(self, ticket_id, new_position):
-        self.ticket_order.remove(ticket_id)
-        self.ticket_order.insert(new_position, ticket_id)
+            elif bet_type == "over_under":
+                total_score = game_data["score_home"] + game_data["score_away"]
+                delta = total_score - bet_value
 
-    def ordered_tickets(self):
-        return [self.tickets[ticket_id] for ticket_id in self.ticket_order]
-
-    def reorder_ticket(self, ticket_id, new_position):
-        self.ticket_order.remove(ticket_id)
-        self.ticket_order.insert(new_position - 1, ticket_id)  # Convert 1-based index back to 0-based
-
-    def delete_ticket(self, ticket_id):
-        del self.tickets[ticket_id]
-        self.ticket_order.remove(ticket_id)
+                bet["delta"] = delta
+                bet["status"] = "green" if (delta > 0 and bet_value == "over") or (delta < 0 and bet_value == "under") else "red"
