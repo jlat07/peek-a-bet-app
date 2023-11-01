@@ -10,6 +10,11 @@ st.title("Peek-A-Bet")
 total_win = len(ticket_manager.get_all_tickets()) * 100
 st.write(f"Total potential win amount: ${total_win}")
 
+# Check if user input is already in session state
+if "user_input" not in st.session_state:
+    st.session_state.user_input = get_user_input(weeks, teams, bet_types, spread_values)
+
+selected_week, selected_team, selected_bet_type, selected_spread, over_under_value = st.session_state.user_input
 
 # Initialize the session state variables if they don't exist
 if 'temp_matchups' not in st.session_state:
@@ -33,26 +38,6 @@ spread_values = list(range(-10, 11))  # for simplicity, using -10 to +10 as spre
 # Temporary storage for match-ups and bets in the current ticket
 # temp_matchups = []
 # temp_bets = []
-
-
-def get_user_input(weeks, teams, bet_types, spread_values):
-    selected_week = st.selectbox('Select Week', weeks, key='select_week_key')
-    selected_team = st.selectbox('Select Team', teams, key='select_team_key')
-    selected_bet_type = st.selectbox('Bet Type', bet_types, key='select_bet_types_key')
-    selected_spread = None
-    over_under_value = None
-    if selected_bet_type == 'Spread':
-        selected_spread = st.selectbox('Select Spread', spread_values, key='select_spread_values_key')
-    else:
-        over_under_value = st.number_input('Enter Over/Under Value', value=50.0)
-    
-    return selected_week, selected_team, selected_bet_type, selected_spread, over_under_value
-
-# Check if user input is already in session state
-if "user_input" not in st.session_state:
-    st.session_state.user_input = get_user_input(weeks, teams, bet_types, spread_values)
-
-selected_week, selected_team, selected_bet_type, selected_spread, over_under_value = st.session_state.user_input
 
 
 
@@ -102,3 +87,16 @@ if st.button("Reset Input"):
     if "user_input" in st.session_state:
         del st.session_state.user_input
 
+
+def get_user_input(weeks, teams, bet_types, spread_values):
+    selected_week = st.selectbox('Select Week', weeks, key='select_week_key')
+    selected_team = st.selectbox('Select Team', teams, key='select_team_key')
+    selected_bet_type = st.selectbox('Bet Type', bet_types, key='select_bet_types_key')
+    selected_spread = None
+    over_under_value = None
+    if selected_bet_type == 'Spread':
+        selected_spread = st.selectbox('Select Spread', spread_values, key='select_spread_values_key')
+    else:
+        over_under_value = st.number_input('Enter Over/Under Value', value=50.0)
+    
+    return selected_week, selected_team, selected_bet_type, selected_spread, over_under_value
