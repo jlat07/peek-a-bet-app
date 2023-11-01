@@ -1,6 +1,34 @@
 import streamlit as st
 from utils.ticket_manager import TicketManager
 
+
+## 
+
+# 1. Define the get_user_input function
+def get_user_input(weeks, teams, bet_types, spread_values):
+    selected_week = st.selectbox('Select Week', weeks, key='select_week_key')
+    selected_team = st.selectbox('Select Team', teams, key='select_team_key')
+    selected_bet_type = st.selectbox('Bet Type', bet_types, key='select_bet_types_key')
+    selected_spread = None
+    over_under_value = None
+    if selected_bet_type == 'Spread':
+        selected_spread = st.selectbox('Select Spread', spread_values, key='select_spread_values_key')
+    else:
+        over_under_value = st.number_input('Enter Over/Under Value', value=50.0)
+    
+    return selected_week, selected_team, selected_bet_type, selected_spread, over_under_value
+
+# 2. Use the get_user_input function in session state
+if "user_input" not in st.session_state:
+    st.session_state.user_input = get_user_input(weeks, teams, bet_types, spread_values)
+
+selected_week, selected_team, selected_bet_type, selected_spread, over_under_value = st.session_state.user_input
+
+
+if st.button("Finalize Ticket"):
+    # ... [rest of the button logic]
+
+
 # Initialize Ticket Manager
 ticket_manager = TicketManager()
 
@@ -10,11 +38,6 @@ st.title("Peek-A-Bet")
 total_win = len(ticket_manager.get_all_tickets()) * 100
 st.write(f"Total potential win amount: ${total_win}")
 
-# Check if user input is already in session state
-if "user_input" not in st.session_state:
-    st.session_state.user_input = get_user_input(weeks, teams, bet_types, spread_values)
-
-selected_week, selected_team, selected_bet_type, selected_spread, over_under_value = st.session_state.user_input
 
 # Initialize the session state variables if they don't exist
 if 'temp_matchups' not in st.session_state:
@@ -39,7 +62,7 @@ spread_values = list(range(-10, 11))  # for simplicity, using -10 to +10 as spre
 # temp_matchups = []
 # temp_bets = []
 
-
+##----------BUTTONS--------
 
 if st.button("Add Match-up"):
     # Use session state variables instead of the local ones
@@ -50,16 +73,17 @@ if st.button("Add Match-up"):
         'value': selected_spread if selected_bet_type == 'Spread' else over_under_value
     })
 
-# Display current match-ups
-st.subheader("Current Match-ups for New Ticket:")
-for matchup, bet in zip(st.session_state.temp_matchups, st.session_state.temp_bets):
-    st.write(f"{matchup} - {bet['type']} {bet['value']}")
-
 if st.button("Finalize Ticket"):
     ticket_manager.add_ticket(st.session_state.temp_matchups, st.session_state.temp_bets)
     # Clear the session state variables
     st.session_state.temp_matchups.clear()
     st.session_state.temp_bets.clear()
+
+    
+# Display current match-ups
+st.subheader("Current Match-ups for New Ticket:")
+for matchup, bet in zip(st.session_state.temp_matchups, st.session_state.temp_bets):
+    st.write(f"{matchup} - {bet['type']} {bet['value']}")
 
 
 # Display Ticket IDs and details
@@ -87,16 +111,3 @@ if st.button("Reset Input"):
     if "user_input" in st.session_state:
         del st.session_state.user_input
 
-
-def get_user_input(weeks, teams, bet_types, spread_values):
-    selected_week = st.selectbox('Select Week', weeks, key='select_week_key')
-    selected_team = st.selectbox('Select Team', teams, key='select_team_key')
-    selected_bet_type = st.selectbox('Bet Type', bet_types, key='select_bet_types_key')
-    selected_spread = None
-    over_under_value = None
-    if selected_bet_type == 'Spread':
-        selected_spread = st.selectbox('Select Spread', spread_values, key='select_spread_values_key')
-    else:
-        over_under_value = st.number_input('Enter Over/Under Value', value=50.0)
-    
-    return selected_week, selected_team, selected_bet_type, selected_spread, over_under_value
