@@ -6,6 +6,18 @@ ticket_manager = TicketManager()
 
 st.title("Peek-A-Bet")
 
+# Display Total potential win
+total_win = len(ticket_manager.get_all_tickets()) * 100
+st.write(f"Total potential win amount: ${total_win}")
+
+
+# Initialize the session state variables if they don't exist
+if 'temp_matchups' not in st.session_state:
+    st.session_state.temp_matchups = []
+
+if 'temp_bets' not in st.session_state:
+    st.session_state.temp_bets = []
+
 # This is a simplified mapping for demonstration. Enhance based on real data.
 matchup_mapping = {
     'Week 1': {'Team A': 'Team B', 'Team C': 'Team D'},
@@ -39,24 +51,31 @@ def get_user_input():
 selected_week, selected_team, selected_bet_type, selected_spread, over_under_value = get_user_input()
 
 # Add button to finalize this match-up
+# Collect ticket input
+selected_week = st.selectbox('Select Week', weeks)
+selected_team = st.selectbox('Select Team', teams)
+# ... [Rest of your code for input collection]
+
 if st.button("Add Match-up"):
+    # Use session state variables instead of the local ones
     opponent = matchup_mapping[selected_week].get(selected_team, "Unknown")
-    temp_matchups.append(f"{selected_team} vs {opponent}")
-    temp_bets.append({
+    st.session_state.temp_matchups.append(f"{selected_team} vs {opponent}")
+    st.session_state.temp_bets.append({
         'type': selected_bet_type,
         'value': selected_spread if selected_bet_type == 'Spread' else over_under_value
     })
 
 # Display current match-ups
 st.subheader("Current Match-ups for New Ticket:")
-for matchup, bet in zip(temp_matchups, temp_bets):
+for matchup, bet in zip(st.session_state.temp_matchups, st.session_state.temp_bets):
     st.write(f"{matchup} - {bet['type']} {bet['value']}")
 
-# Add new ticket button
 if st.button("Finalize Ticket"):
-    ticket_manager.add_ticket(temp_matchups, temp_bets)
-    temp_matchups.clear()
-    temp_bets.clear()
+    ticket_manager.add_ticket(st.session_state.temp_matchups, st.session_state.temp_bets)
+    # Clear the session state variables
+    st.session_state.temp_matchups.clear()
+    st.session_state.temp_bets.clear()
+
 
 # Display Ticket IDs and details
 with st.container():
@@ -79,6 +98,3 @@ with st.container():
             new_position = st.selectbox(f'Position for {ticket_id}', list(range(1, len(ticket_manager.get_all_tickets())+1)), index=ticket_manager.ticket_order.index(ticket_id))
             ticket_manager.change_ticket_order(ticket_id, new_position-1)
 
-# Display Total potential win
-total_win = len(ticket_manager.get_all_tickets()) * 100
-st.write(f"Total potential win amount: ${total_win}")
