@@ -19,19 +19,15 @@ bet_types = ['Spread', 'Over/Under']
 spread_values = list(range(-10, 11))
 over_under_values = list(range(30, 71))
 
-### Session Data
-# Check if temp_matchups is in session state
-if 'temp_matchups' not in st.session_state:
-    st.session_state.temp_matchups = []
+### 1. Session State Adjustments
+if 'draft_ticket' not in st.session_state:
+    st.session_state.draft_ticket = {
+        'matchups': [],
+        'bets': []
+    }
 
-# Check if temp_bets is in session state
-if 'temp_bets' not in st.session_state:
-    st.session_state.temp_bets = []
-
-# Check if user_input is in session state
-if 'user_input' not in st.session_state:
-    st.session_state.user_input = None
-
+if 'tickets' not in st.session_state:
+    st.session_state.tickets = []
 
 # User Input Function
 def get_user_input(weeks, teams, bet_types, spread_values, over_under_values):
@@ -46,69 +42,54 @@ def get_user_input(weeks, teams, bet_types, spread_values, over_under_values):
     
     return selected_week, selected_team, selected_bet_type, selected_value
 
-
-
-
-# ... [Your code for adding matchups and finalizing tickets]
-
-def add_matchup_to_session(selected_week, selected_team, selected_bet_type, selected_value):
+### 2. Modifying Bet Adding Logic
+def add_bet_to_draft(selected_week, selected_team, selected_bet_type, selected_value):
     opponent = matchup_mapping[selected_week].get(selected_team)
     if not opponent:
         st.warning(f"No matchup found for {selected_team} in {selected_week}.")
         return
 
-    st.session_state.temp_matchups.append(f"{selected_team} vs {opponent}")
-    st.session_state.temp_bets.append({
+    st.session_state.draft_ticket['matchups'].append(f"{selected_team} vs {opponent}")
+    st.session_state.draft_ticket['bets'].append({
         'type': selected_bet_type,
         'value': selected_value
     })
 
+### 3. Finalizing a Ticket
 def finalize_ticket():
-    ticket_manager.add_ticket(st.session_state.temp_matchups, st.session_state.temp_bets)
-    st.session_state.temp_matchups.clear()
-    st.session_state.temp_bets.clear()
-
-
+    num_bets = len(st.session_state.draft_ticket['bets'])
+    if 3 <= num_bets <= 10:
+        st.session_state.tickets.append(st.session_state.draft_ticket.copy())
+        st.session_state.draft_ticket = {
+            'matchups': [],
+            'bets': []
+        }
+    else:
+        st.warning("A ticket requires between 3 to 10 bets.")
 
 # UI Elements and Logic
 st.subheader("Peek-A-Bet")
+selected_week, selected_team, selected_bet_type, selected_value = get_user_input(weeks, teams, bet_types, spread_values, over_under_values)
 
-# Always show the dropdowns for user input at the top
-selected_week, selected_team, selected_bet_type, selected_value = get_user_input(
-    weeks, teams, bet_types, spread_values, over_under_values
-)
+if st.button("Add Bet"):
+    add_bet_to_draft(selected_week, selected_team, selected_bet_type, selected_value)
 
-# [The previous logic for session state goes here]
+### 4. Display Draft Ticket and Finalized Tickets
+# Display Draft Ticket
+st.subheader("Draft Ticket")
+for i, (matchup, bet) in enumerate(zip(st.session_state.draft_ticket['matchups'], st.session_state.draft_ticket['bets'])):
+    st.write(f"{matchup} - {bet['type']} {bet['value']}")
+    if st.button(f"Remove Bet {i+1}"):
+        del st.session_state.draft_ticket['matchups'][i]
+        del st.session_state.draft_ticket['bets'][i]
 
-# Add Bet Logic
-if st.button("Add Bet"):  # Changed text here
-    st.session_state.user_input = (
-        selected_week, selected_team, selected_bet_type, selected_value
-    )
-    st.write(st.session_state.user_input)  # Debug statement
-    add_matchup_to_session(*st.session_state.user_input)
-
-# Display Current Match-ups for New Ticket
-
-# [The previous logic to display match-ups goes here]
-
-# Finalize Ticket Logic
 if st.button("Finalize Ticket"):
     finalize_ticket()
 
-# Display Tickets in a Table
-tickets_data = []
-for ticket in ticket_manager.ordered_tickets():
-    tickets_data.append({
-        "Ticket ID": ticket.ticket_id,
-        "Matchups": ', '.join(ticket.matchups),
-        "Bets": ', '.join([f"{bet['type']} {bet['value']}" for bet in ticket.bets])
-    })
-
+tickets_data = [{'Ticket ID': i + 1, "Matchups": ', '.join(ticket['matchups']), "Bets": ', '.join([f"{bet['type']} {bet['value']}" for bet in ticket['bets']])} for i, ticket in enumerate(st.session_state.tickets)]
 st.table(tickets_data)
 
-#Want it under the aobve table
-#Check Scores Button and Logic
+# Check Scores Button and Logic
 st.write("Check Ticket Status")
 if st.button("Check Scores"):
     try:
@@ -119,10 +100,6 @@ if st.button("Check Scores"):
         game_data = api_client.get_game_data(team=selected_team, week=selected_week)
         
         if game_data:
-            # Your logic to determine ticket status and deltas based on fetched scores
-            # and user's ticket data goes here
-
-            # For demonstration purposes:
             st.write(f"Match: {game_data['team_home']} vs {game_data['team_away']}")
             st.write(f"Score: {game_data['score_home']} - {game_data['score_away']}")
             st.write(f"Ticket Status: Green (This is just an example. Replace with actual logic.)")
@@ -133,16 +110,3 @@ if st.button("Check Scores"):
 
     except Exception as e:
         st.error(f"Error: {str(e)}")
-
-
-
-opponent = matchup_mapping[selected_week].get(selected_team)
-st.write(f"Opponent for {selected_team} in {selected_week} is {opponent}")  # Debug line
-
-st.session_state.temp_matchups.append(f"{selected_team} vs {opponent}")
-st.session_state.temp_bets.append({
-    'type': selected_bet_type,
-    'value': selected_value
-})
-st.write(f"Current matchups in session state: {st.session_state.temp_matchups}")  # Debug line
-st.write(f"Current bets in session state: {st.session_state.temp_bets}")  # Debug line
