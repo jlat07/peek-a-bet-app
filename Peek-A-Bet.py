@@ -71,6 +71,7 @@ def finalize_ticket():
 
 
 # UI Elements and Logic
+st.subheader("Peek-A-Bet")
 
 # Always show the dropdowns for user input at the top
 selected_week, selected_team, selected_bet_type, selected_value = get_user_input(
@@ -108,7 +109,7 @@ st.table(tickets_data)
 
 #Want it under the aobve table
 #Check Scores Button and Logic
-st.subheader("Check Ticket Status")
+st.write("Check Ticket Status")
 if st.button("Check Scores"):
     try:
         # Accessing the saved values from session state
