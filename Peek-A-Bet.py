@@ -19,6 +19,20 @@ bet_types = ['Spread', 'Over/Under']
 spread_values = list(range(-10, 11))
 over_under_values = list(range(30, 71))
 
+### Session Data
+# Check if temp_matchups is in session state
+if 'temp_matchups' not in st.session_state:
+    st.session_state.temp_matchups = []
+
+# Check if temp_bets is in session state
+if 'temp_bets' not in st.session_state:
+    st.session_state.temp_bets = []
+
+# Check if user_input is in session state
+if 'user_input' not in st.session_state:
+    st.session_state.user_input = None
+
+
 # User Input Function
 def get_user_input(weeks, teams, bet_types, spread_values, over_under_values):
     selected_week = st.selectbox('Select Week', weeks, key='select_week_key')
