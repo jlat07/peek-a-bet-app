@@ -30,7 +30,8 @@ def get_user_input(weeks, teams, bet_types, spread_values, over_under_values):
     else:
         selected_value = st.selectbox('Select Over/Under Value', over_under_values, key='select_over_under_values_key')
     
-    return selected_week, selected_team, selected_bet_type, selected_spread, over_under_value
+    return selected_week, selected_team, selected_bet_type, selected_value
+
 
 
 
