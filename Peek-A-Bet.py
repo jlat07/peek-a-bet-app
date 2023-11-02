@@ -38,26 +38,6 @@ def get_user_input(weeks, teams, bet_types, spread_values, over_under_values):
 
 # ... [Your code for adding matchups and finalizing tickets]
 
-st.subheader("Check Ticket Status")
-if st.button("Check Scores"):
-    try:
-        game_data = api_client.get_game_data(team=selected_team, week=selected_week)
-        if game_data:
-            # Your logic to determine ticket status and deltas based on fetched scores
-            # and user's ticket data goes here
-
-            # For demonstration purposes:
-            st.write(f"Match: {game_data['team_home']} vs {game_data['team_away']}")
-            st.write(f"Score: {game_data['score_home']} - {game_data['score_away']}")
-            st.write(f"Ticket Status: Green (This is just an example. Replace with actual logic.)")
-            st.write(f"Score Delta: +4 (Again, an example. Replace with actual logic.)")
-            
-        else:
-            st.warning(f"No game data found for {selected_team} in week {selected_week}.")
-
-    except Exception as e:
-        st.error(f"Error: {str(e)}")
-
 def add_matchup_to_session(selected_week, selected_team, selected_bet_type, selected_value):
     opponent = matchup_mapping[selected_week].get(selected_team)
     if not opponent:
@@ -102,3 +82,25 @@ for ticket in ticket_manager.ordered_tickets():
     })
 
 st.table(tickets_data)
+
+#Want it under the aobve table
+#Check Scores Button and Logic
+st.subheader("Check Ticket Status")
+if st.button("Check Scores"):
+    try:
+        game_data = api_client.get_game_data(team=selected_team, week=selected_week)
+        if game_data:
+            # Your logic to determine ticket status and deltas based on fetched scores
+            # and user's ticket data goes here
+
+            # For demonstration purposes:
+            st.write(f"Match: {game_data['team_home']} vs {game_data['team_away']}")
+            st.write(f"Score: {game_data['score_home']} - {game_data['score_away']}")
+            st.write(f"Ticket Status: Green (This is just an example. Replace with actual logic.)")
+            st.write(f"Score Delta: +4 (Again, an example. Replace with actual logic.)")
+            
+        else:
+            st.warning(f"No game data found for {selected_team} in week {selected_week}.")
+
+    except Exception as e:
+        st.error(f"Error: {str(e)}")
