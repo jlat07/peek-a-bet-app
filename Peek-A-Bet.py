@@ -84,6 +84,7 @@ if st.button("Add Bet"):  # Changed text here
     st.session_state.user_input = (
         selected_week, selected_team, selected_bet_type, selected_value
     )
+    st.write(st.session_state.user_input)  # Debug statement
     add_matchup_to_session(*st.session_state.user_input)
 
 # Display Current Match-ups for New Ticket
