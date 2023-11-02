@@ -58,11 +58,6 @@ def finalize_ticket():
 # UI Elements and Logic
 # [The previous logic for session state goes here]
 
-if st.button("Add Match-up"):
-    st.session_state.user_input = get_user_input(weeks, teams, bet_types, spread_values, over_under_values)
-    add_matchup_to_session(*st.session_state.user_input)
-
-
 # Add Match-up Logic
 if st.button("Add Match-up"):
     st.session_state.user_input = get_user_input(weeks, teams, bet_types, spread_values, over_under_values)
