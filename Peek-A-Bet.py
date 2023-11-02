@@ -102,7 +102,12 @@ st.table(tickets_data)
 st.subheader("Check Ticket Status")
 if st.button("Check Scores"):
     try:
+        # Accessing the saved values from session state
+        selected_week = st.session_state.user_input[0]
+        selected_team = st.session_state.user_input[1]
+
         game_data = api_client.get_game_data(team=selected_team, week=selected_week)
+        
         if game_data:
             # Your logic to determine ticket status and deltas based on fetched scores
             # and user's ticket data goes here
