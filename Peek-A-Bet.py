@@ -3,23 +3,21 @@ from utils.ticket import Ticket
 from utils.ticket_manager import TicketManager
 from utils.api_client import APIClient
 
-# Initialize Ticket Manager
+# Initialize Ticket Manager and API Client
 ticket_manager = TicketManager()
-
-# Instantiate the API client
 api_client = APIClient(api_key="YOUR_API_KEY", base_url="YOUR_BASE_URL")
 
-# Global Constants/Variables Initialization
+# Constants
 matchup_mapping = {
     'Week 1': {'Team A': 'Team B', 'Team C': 'Team D'},
     'Week 2': {'Team A': 'Team C', 'Team B': 'Team D'},
     # ... [Add more weeks as needed]
 }
-
 weeks = ['Week 1', 'Week 2', 'Week 3']
 teams = ['Team A', 'Team B', 'Team C', 'Team D']
 bet_types = ['Spread', 'Over/Under']
 spread_values = list(range(-10, 11))
+over_under_values = list(range(30, 71))
 
 # User Input Function
 def get_user_input(weeks, teams, bet_types, spread_values, over_under_values):
@@ -55,10 +53,15 @@ def finalize_ticket():
     st.session_state.temp_matchups.clear()
     st.session_state.temp_bets.clear()
 
-over_under_values = list(range(30, 71))
 
-# Check if user input is in session state
-... # [The previous logic for session state goes here]
+
+# UI Elements and Logic
+# [The previous logic for session state goes here]
+
+if st.button("Add Match-up"):
+    st.session_state.user_input = get_user_input(weeks, teams, bet_types, spread_values, over_under_values)
+    add_matchup_to_session(*st.session_state.user_input)
+
 
 # Add Match-up Logic
 if st.button("Add Match-up"):
@@ -66,7 +69,8 @@ if st.button("Add Match-up"):
     add_matchup_to_session(*st.session_state.user_input)
 
 # Display Current Match-ups for New Ticket
-... # [The previous logic to display match-ups goes here]
+
+# [The previous logic to display match-ups goes here]
 
 # Finalize Ticket Logic
 if st.button("Finalize Ticket"):
