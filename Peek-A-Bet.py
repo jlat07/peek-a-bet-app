@@ -71,11 +71,19 @@ def finalize_ticket():
 
 
 # UI Elements and Logic
+
+# Always show the dropdowns for user input at the top
+selected_week, selected_team, selected_bet_type, selected_value = get_user_input(
+    weeks, teams, bet_types, spread_values, over_under_values
+)
+
 # [The previous logic for session state goes here]
 
-# Add Match-up Logic
-if st.button("Add Match-up"):
-    st.session_state.user_input = get_user_input(weeks, teams, bet_types, spread_values, over_under_values)
+# Add Bet Logic
+if st.button("Add Bet"):  # Changed text here
+    st.session_state.user_input = (
+        selected_week, selected_team, selected_bet_type, selected_value
+    )
     add_matchup_to_session(*st.session_state.user_input)
 
 # Display Current Match-ups for New Ticket
