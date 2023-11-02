@@ -132,3 +132,16 @@ if st.button("Check Scores"):
 
     except Exception as e:
         st.error(f"Error: {str(e)}")
+
+
+
+opponent = matchup_mapping[selected_week].get(selected_team)
+st.write(f"Opponent for {selected_team} in {selected_week} is {opponent}")  # Debug line
+
+st.session_state.temp_matchups.append(f"{selected_team} vs {opponent}")
+st.session_state.temp_bets.append({
+    'type': selected_bet_type,
+    'value': selected_value
+})
+st.write(f"Current matchups in session state: {st.session_state.temp_matchups}")  # Debug line
+st.write(f"Current bets in session state: {st.session_state.temp_bets}")  # Debug line
