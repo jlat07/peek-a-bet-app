@@ -44,8 +44,8 @@ def get_user_input(selected_week, selected_team, selected_bet_type, selected_val
     selected_team = st.selectbox('Select Team', sorted(matchup_mapping[selected_week]['teams'].keys()))
 
     # Opponent team (displayed for user's information)
-    opponent_team = matchup_mapping[selected_week]['teams'][selected_team]
-    st.write(f'Opponent: {opponent_team}')
+    # opponent_team = matchup_mapping[selected_week]['teams'][selected_team]
+    # st.write(f'Opponent: {opponent_team}')
 
     # # Slider for Spread
     # spread_slider = st.slider('Select Spread (Slider)', min_value=-50.0, max_value=50.0, value=0.0, step=0.5)
