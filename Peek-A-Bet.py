@@ -216,7 +216,7 @@ for ticket in st.session_state.tickets:
         border_style = "none"
         
         # Check if there's a score
-        if game_data and game_data['score_home'] != 0 and game_data['score_away'] != 0:
+        if game_data and game_data.get('score_home') != 0 and game_data.get('score_away') != 0:
             # Evaluate the bet condition here and update status_color
             # This is a placeholder, and the actual evaluation will depend on your bet's conditions.
             if bet["type"] == "Spread":
@@ -265,19 +265,31 @@ st.write("Check Ticket Status")
 if st.button("Check Scores"):
     for ticket in st.session_state.tickets:
         for matchup in ticket['matchups']:
-            # Assuming each matchup is formatted as "Team1 vs Team2"
-            team1, team2 = matchup.split(" vs ")
+            # Assuming each matchup is formatted as "Team1: Team2"
+            team1, team2 = matchup.split(":")
             try:
-                game_data = api_client.get_game_data(team=team1) # Modify to accommodate team2 if necessary
+                # Fetch game data for both teams
+                game_data_team1 = api_client.get_game_data(team=team1)
+                game_data_team2 = api_client.get_game_data(team=team2)
+                
+                # Determine which data is the correct one for this matchup
+                game_data = None
+                if game_data_team1 and (game_data_team1['team_away'] == team2 or game_data_team1['team_home'] == team2):
+                    game_data = game_data_team1
+                elif game_data_team2 and (game_data_team2['team_away'] == team1 or game_data_team2['team_home'] == team1):
+                    game_data = game_data_team2
+
+                # If game data is found, display scores and compute outcome
                 if game_data:
                     st.write(f"Match: {game_data['team_home']} vs {game_data['team_away']}")
                     st.write(f"Score: {game_data['score_home']} - {game_data['score_away']}")
-                    ticket_obj = Ticket(ticket_id="TemporaryID", matchups=ticket['matchups'], bets=ticket['bets']) # Replace "TemporaryID" with an actual ID if available
-                    ticket_obj.compute_outcome(game_data) # This updates the status of each bet
+                    ticket_obj = Ticket(ticket_id="TemporaryID", matchups=ticket['matchups'], bets=ticket['bets'])
+                    ticket_obj.compute_outcome(game_data)
                 else:
-                    st.warning(f"No game data found for {team1}.")
+                    st.warning(f"No game data found for {team1} vs {team2}.")
             except Exception as e:
                 st.error(f"Error: {str(e)}")
+
 
 
 # Debugging: Displaying Teams
