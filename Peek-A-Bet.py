@@ -19,6 +19,10 @@ if 'draft_ticket' not in st.session_state:
         'matchups': [],
         'bets': []
     }
+
+if 'delete_buttons' not in st.session_state:
+    st.session_state.delete_buttons = [False] * len(st.session_state.draft_ticket['bets'])
+        
 if 'tickets' not in st.session_state:
     st.session_state.tickets = []
 
@@ -78,14 +82,6 @@ selected_week, selected_team, selected_bet_type, selected_value = get_user_input
 # Add Bet Button
 if st.button("Add Bet"):
     add_bet_to_draft(selected_week, selected_team, selected_bet_type, selected_value)
-
-
-# Initialization of Delete Button List
-if 'draft_ticket' not in st.session_state:
-    st.session_state.draft_ticket = {"matchups": [], "bets": []}
-
-if 'delete_buttons' not in st.session_state:
-    st.session_state.delete_buttons = [False] * len(st.session_state.draft_ticket['bets'])
 
 
 # Display Draft Ticket
@@ -212,8 +208,8 @@ for ticket in st.session_state.tickets:
     st.markdown("### Ticket ID")
     
     # Extract the matchups and bets from the ticket
-    matchups = ticket['Matchups'].split(", ")
-    bets = ticket['Bets']
+    matchups = ticket['matchups']
+    bets = ticket['bets']
     
     for matchup, bet in zip(matchups, bets):
         status_color = "gray"
@@ -240,19 +236,21 @@ for ticket in st.session_state.tickets:
 
 
 
-# Check Scores
 st.write("Check Ticket Status")
 if st.button("Check Scores"):
-    # For now, this checks the most recently selected team and week, but this can be modified
-    try:
-        game_data = api_client.get_game_data(team=selected_team, week=selected_week)
-        if game_data:
-            st.write(f"Match: {game_data['team_home']} vs {game_data['team_away']}")
-            st.write(f"Score: {game_data['score_home']} - {game_data['score_away']}")
-        else:
-            st.warning(f"No game data found for {selected_team} in week {selected_week}.")
-    except Exception as e:
-        st.error(f"Error: {str(e)}")
+    for ticket in st.session_state.tickets:
+        matchups = ticket['matchups']
+        for matchup in matchups:
+            team = matchup.split(" vs ")[0]  # Assuming the format "TeamA vs TeamB"
+            try:
+                game_data = api_client.get_game_data(team=team, week=selected_week)
+                if game_data:
+                    st.write(f"Match: {game_data['team_home']} vs {game_data['team_away']}")
+                    st.write(f"Score: {game_data['score_home']} - {game_data['score_away']}")
+                else:
+                    st.warning(f"No game data found for {team} in week {selected_week}.")
+            except Exception as e:
+                st.error(f"Error: {str(e)}")
 
 # Debugging: Displaying Teams
 # st.write("Matchup Mapping")
@@ -263,3 +261,4 @@ if st.button("Check Scores"):
 # st.write(teams)
 # st.write("Weeks")
 # st.write(weeks)
+st.write(st.session_state.tickets)
