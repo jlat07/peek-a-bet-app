@@ -1,3 +1,4 @@
+import uuid
 import streamlit as st
 from utils.ticket import Ticket
 from utils.matchup_data import matchup_mapping, weeks, teams
@@ -52,8 +53,10 @@ def add_bet_to_draft(selected_week, selected_team, selected_bet_type, selected_v
         st.warning(f"No matchup found for {selected_team} in {selected_week}.")
         return
 
+    bet_id = str(uuid.uuid4())  # Generate a unique ID for the bet
     st.session_state.draft_ticket['matchups'].append(f"{selected_team} vs {opponent}")
     st.session_state.draft_ticket['bets'].append({
+        'id': bet_id,  # Add the unique ID to the bet
         'type': selected_bet_type,
         'value': selected_value
     })
@@ -83,8 +86,8 @@ st.subheader("Draft Ticket")
 for i, (matchup, bet) in enumerate(zip(st.session_state.draft_ticket['matchups'], st.session_state.draft_ticket['bets'])):
     st.write(f"{matchup} - {bet['type']} {bet['value']}")
     if st.button(f"Remove Bet {i+1}"):
-        del st.session_state.draft_ticket['matchups'][i or i-1]
-        del st.session_state.draft_ticket['bets'][i or i-1]
+        st.session_state.draft_ticket['matchups'].pop(i)
+        st.session_state.draft_ticket['bets'] = [b for b in st.session_state.draft_ticket['bets'] if b['id'] != bet['id']]
 
 # Finalize Ticket Button
 if st.button("Finalize Ticket"):
