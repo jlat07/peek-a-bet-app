@@ -83,8 +83,8 @@ st.subheader("Draft Ticket")
 for i, (matchup, bet) in enumerate(zip(st.session_state.draft_ticket['matchups'], st.session_state.draft_ticket['bets'])):
     st.write(f"{matchup} - {bet['type']} {bet['value']}")
     if st.button(f"Remove Bet {i+1}"):
-        del st.session_state.draft_ticket['matchups'][i]
-        del st.session_state.draft_ticket['bets'][i]
+        del st.session_state.draft_ticket['matchups'][i or i-1]
+        del st.session_state.draft_ticket['bets'][i or i-1]
 
 # Finalize Ticket Button
 if st.button("Finalize Ticket"):
