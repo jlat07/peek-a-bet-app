@@ -140,40 +140,40 @@ if st.button("Finalize Ticket"):
 
 #### OLD PEEK-A-BET Styling
 
-for ticket in st.session_state.tickets:
-    st.write(f"Ticket ID: ...")  # Displaying ticket ID for reference
-    for matchup, bet in zip(ticket['matchups'], ticket['bets']):
+# for ticket in st.session_state.tickets:
+#     st.write(f"Ticket ID: ...")  # Displaying ticket ID for reference
+#     for matchup, bet in zip(ticket['matchups'], ticket['bets']):
         
-        # Assuming the 'bet' dictionary contains a 'status' key. 
-        # This status can be 'win', 'lose', 'pending', etc.
-        # Replace with actual logic or data structure if different
-        status = bet.get('status', 'pending')
+#         # Assuming the 'bet' dictionary contains a 'status' key. 
+#         # This status can be 'win', 'lose', 'pending', etc.
+#         # Replace with actual logic or data structure if different
+#         status = bet.get('status', 'pending')
 
-        status_color = "gray"
-        border_style = "none"
+#         status_color = "gray"
+#         border_style = "none"
         
-        if status == "win":
-            status_color = "green"
-            border_style = "2px solid black"
-        elif status == "lose":
-            status_color = "red"
-            border_style = "2px solid black"
+#         if status == "win":
+#             status_color = "green"
+#             border_style = "2px solid black"
+#         elif status == "lose":
+#             status_color = "red"
+#             border_style = "2px solid black"
 
-        col1, col2, col3, col4 = st.columns([3, 2, 2, 1])  # Adjust the column widths as per your needs
+#         col1, col2, col3, col4 = st.columns([3, 2, 2, 1])  # Adjust the column widths as per your needs
         
-        with col1:
-            st.write(matchup)  # e.g. "Team A vs Team B"
+#         with col1:
+#             st.write(matchup)  # e.g. "Team A vs Team B"
         
-        with col2:
-            st.write(bet['type'])  # e.g. "Spread" or "Over/Under"
+#         with col2:
+#             st.write(bet['type'])  # e.g. "Spread" or "Over/Under"
         
-        with col3:
-            st.write(bet['value'])  # e.g. "+5" or "50"
+#         with col3:
+#             st.write(bet['value'])  # e.g. "+5" or "50"
         
-        with col4:
-            st.markdown(f"<div style='background-color: {status_color}; border: {border_style}; padding: 10px;'>{status.capitalize()}</div>", unsafe_allow_html=True)
+#         with col4:
+#             st.markdown(f"<div style='background-color: {status_color}; border: {border_style}; padding: 10px;'>{status.capitalize()}</div>", unsafe_allow_html=True)
         
-    st.write("---")  # A separator line after each ticket for better clarity
+#     st.write("---")  # A separator line after each ticket for better clarity
 
 
 ### 3rd times a charm
@@ -184,37 +184,37 @@ for ticket in st.session_state.tickets:
 
 ### Display Finalized Tickets with Enhanced Styling ###
 
-# st.subheader("Finalized Tickets")
+st.subheader("Finalized Tickets")
 
-# for ticket in st.session_state.tickets:
-#     st.markdown(f"### Ticket ID: {ticket['Ticket ID']} ###")
+for ticket in st.session_state.tickets:
+    st.markdown(f"### Ticket ID: {ticket['Ticket ID']} ###")
     
-#     # Extract the matchups and bets from the ticket
-#     matchups = ticket['Matchups'].split(", ")
-#     bets = ticket['Bets']
+    # Extract the matchups and bets from the ticket
+    matchups = ticket['Matchups'].split(", ")
+    bets = ticket['Bets']
     
-#     for matchup, bet in zip(matchups, bets):
-#         status_color = "gray"
-#         border_style = "none"
+    for matchup, bet in zip(matchups, bets):
+        status_color = "gray"
+        border_style = "none"
         
-#         if bet["status"] == "win":
-#             status_color = "green"
-#             border_style = "2px solid black"
-#         elif bet["status"] == "lose":
-#             status_color = "red"
-#             border_style = "2px solid black"
+        if bet["status"] == "win":
+            status_color = "green"
+            border_style = "2px solid black"
+        elif bet["status"] == "lose":
+            status_color = "red"
+            border_style = "2px solid black"
         
-#         col1, col2, col3, col4 = st.columns([2,1,1,1])
-#         with col1:
-#             st.write(matchup)
-#         with col2:
-#             st.write(f"{bet['type']} {bet['value']}")
-#         with col3:
-#             st.write(bet["condition"])  # Assuming you have this key. If not, replace appropriately.
-#         with col4:
-#             st.markdown(f"<div style='background-color: {status_color}; border: {border_style}; padding: 10px;'>{bet['status'].capitalize()}</div>", unsafe_allow_html=True)
+        col1, col2, col3, col4 = st.columns([2,1,1,1])
+        with col1:
+            st.write(matchup)
+        with col2:
+            st.write(f"{bet['type']} {bet['value']}")
+        with col3:
+            st.write(bet["condition"])  # Assuming you have this key. If not, replace appropriately.
+        with col4:
+            st.markdown(f"<div style='background-color: {status_color}; border: {border_style}; padding: 10px;'>{bet['status'].capitalize()}</div>", unsafe_allow_html=True)
             
-#     st.write("---")  # Separator after each ticket
+    st.write("---")  # Separator after each ticket
 
 
 
