@@ -92,17 +92,46 @@ if st.button("Finalize Ticket"):
 
 # Display All Tickets
 
+# Note: This assumes you already have a function or method that checks the ticket's outcome based on game data.
+
 for i, ticket in enumerate(st.session_state.tickets):
     st.subheader(f"Ticket ID: {i + 1}")
     ticket_data = []
+
+    # Placeholder game data. This should come from your API call or some source of truth.
+    game_data = {
+        "team_home": "Team A",
+        "score_home": 35,
+        "team_away": "Team B",
+        "score_away": 30
+    }
+
     for matchup, bet in zip(ticket['matchups'], ticket['bets']):
+        status, delta = "Playing", None
+        if bet['type'] == "Spread":
+            # Implement your logic here for the Spread bet type.
+            pass
+        elif bet['type'] == "Over/Under":
+            total_score = game_data["score_home"] + game_data["score_away"]
+            delta = total_score - bet['value']
+            if delta > 0:
+                status = "Over"
+            else:
+                status = "Under"
+
+        status_color = "green" if status in ["Over", "Under"] else "red"
+        status_md = f"<span style='color:{status_color}'>{status}</span>"
+
         ticket_data.append({
             "Matchup": matchup,
             "Bet Type": bet['type'],
             "Bet Value": bet['value'],
-            "Status": "Pending"  # Placeholder
+            "Status": status_md,
+            "Delta": delta
         })
+
     st.table(ticket_data)
+
 
 
 
@@ -121,11 +150,11 @@ if st.button("Check Scores"):
         st.error(f"Error: {str(e)}")
 
 # Debugging: Displaying Teams
-st.write("Matchup Mapping")
-st.write(matchup_mapping)
-st.write("Selected Week")
-st.write(selected_week)
-st.write("Teams")
-st.write(teams)
-st.write("Weeks")
-st.write(weeks)
+# st.write("Matchup Mapping")
+# st.write(matchup_mapping)
+# st.write("Selected Week")
+# st.write(selected_week)
+# st.write("Teams")
+# st.write(teams)
+# st.write("Weeks")
+# st.write(weeks)
