@@ -109,5 +109,6 @@ if st.button("Check Scores"):
         st.error(f"Error: {str(e)}")
 
 # Debugging: Displaying Teams
-st.write("Teams:")
+st.write(matchup_mapping)
+st.write(selected_week)
 st.write(teams)
