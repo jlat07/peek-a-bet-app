@@ -266,30 +266,20 @@ if st.button("Check Scores"):
     for ticket in st.session_state.tickets:
         for matchup in ticket['matchups']:
             # Assuming each matchup is formatted as "Team1: Team2"
-            team1, team2 = matchup.split(":")
+            team1, team2 = matchup.split(": ")
             try:
-                # Fetch game data for both teams
-                game_data_team1 = api_client.get_game_data(team=team1)
-                game_data_team2 = api_client.get_game_data(team=team2)
+                game_data = api_client.get_game_data(team=team1) # Modify to accommodate team2 if necessary
                 
-                # Determine which data is the correct one for this matchup
-                game_data = None
-                if game_data_team1 and (game_data_team1['team_away'] == team2 or game_data_team1['team_home'] == team2):
-                    game_data = game_data_team1
-                elif game_data_team2 and (game_data_team2['team_away'] == team1 or game_data_team2['team_home'] == team1):
-                    game_data = game_data_team2
-
-                # If game data is found, display scores and compute outcome
-                if game_data:
+                if game_data is not None:
+                    st.write(f"Debug: {game_data}")  # Debugging line
                     st.write(f"Match: {game_data['team_home']} vs {game_data['team_away']}")
                     st.write(f"Score: {game_data['score_home']} - {game_data['score_away']}")
-                    ticket_obj = Ticket(ticket_id="TemporaryID", matchups=ticket['matchups'], bets=ticket['bets'])
-                    ticket_obj.compute_outcome(game_data)
+                    ticket_obj = Ticket(ticket_id="TemporaryID", matchups=ticket['matchups'], bets=ticket['bets']) # Replace "TemporaryID" with an actual ID if available
+                    ticket_obj.compute_outcome(game_data) # This updates the status of each bet
                 else:
                     st.warning(f"No game data found for {team1} vs {team2}.")
             except Exception as e:
                 st.error(f"Error: {str(e)}")
-
 
 
 # Debugging: Displaying Teams
