@@ -187,7 +187,7 @@ if st.button("Finalize Ticket"):
 st.subheader("Finalized Tickets")
 
 for ticket in st.session_state.tickets:
-    st.markdown(f"### Ticket ID: {ticket['Ticket ID']} ###")
+    st.markdown("### Ticket ID")
     
     # Extract the matchups and bets from the ticket
     matchups = ticket['Matchups'].split(", ")
