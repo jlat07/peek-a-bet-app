@@ -62,7 +62,7 @@ def add_bet_to_draft(selected_week, selected_team, selected_bet_type, selected_v
 def finalize_ticket():
     num_bets = len(st.session_state.draft_ticket['bets'])
     if 3 <= num_bets <= 10:
-        st.session_state.tickets.append(st.session_state.draft_ticket.copy())
+        st.session_state.tickets.append(st.session_state.draft_ticket.copy())  # Use copy to ensure you're not appending a reference
         st.session_state.draft_ticket = {
             'matchups': [],
             'bets': []
@@ -91,8 +91,19 @@ if st.button("Finalize Ticket"):
     finalize_ticket()
 
 # Display All Tickets
-tickets_data = [{'Ticket ID': i + 1, "Matchups": ', '.join(ticket['matchups']), "Bets": ', '.join([f"{bet['type']} {bet['value']}" for bet in ticket['bets']])} for i, ticket in enumerate(st.session_state.tickets)]
+
+tickets_data = []
+for i, ticket in enumerate(st.session_state.tickets):
+    for matchup, bet in zip(ticket['matchups'], ticket['bets']):
+        tickets_data.append({
+            'Ticket ID': i + 1,
+            "Matchup": matchup,
+            "Bet Type": bet['type'],
+            "Bet Value": bet['value'],
+            # Add other fields if necessary, such as "Status" once implemented
+        })
 st.table(tickets_data)
+
 
 # Check Scores
 st.write("Check Ticket Status")
