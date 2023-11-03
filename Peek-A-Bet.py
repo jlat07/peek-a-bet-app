@@ -106,7 +106,7 @@ if st.button("Check Scores"):
         st.error(f"Error: {str(e)}")
 
 
-        ## Debug
-        st.write("print teams")
-        st.write(teams)
+## Debug
+st.write("print teams")
+st.write(teams)
 
