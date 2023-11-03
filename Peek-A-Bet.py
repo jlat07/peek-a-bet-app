@@ -250,21 +250,40 @@ for ticket in st.session_state.tickets:
 
 
 
+# st.write("Check Ticket Status")
+# if st.button("Check Scores"):
+#     for ticket in st.session_state.tickets:
+#         matchups = ticket['matchups']
+#         for matchup in matchups:
+#             team = matchup.split(" vs ")[0]  # Assuming the format "TeamA vs TeamB"
+#             try:
+#                 game_data = api_client.get_game_data(team=team, week=selected_week)
+#                 if game_data:
+#                     st.write(f"Match: {game_data['team_home']} vs {game_data['team_away']}")
+#                     st.write(f"Score: {game_data['score_home']} - {game_data['score_away']}")
+#                 else:
+#                     st.warning(f"No game data found for {team} in week {selected_week}.")
+#             except Exception as e:
+#                 st.error(f"Error: {str(e)}")
+
 st.write("Check Ticket Status")
 if st.button("Check Scores"):
     for ticket in st.session_state.tickets:
-        matchups = ticket['matchups']
-        for matchup in matchups:
-            team = matchup.split(" vs ")[0]  # Assuming the format "TeamA vs TeamB"
+        for matchup in ticket['matchups']:
+            # Assuming each matchup is formatted as "Team1 vs Team2"
+            team1, team2 = matchup.split(" vs ")
             try:
-                game_data = api_client.get_game_data(team=team, week=selected_week)
+                game_data = api_client.get_game_data(team=team1) # Modify to accommodate team2 if necessary
                 if game_data:
                     st.write(f"Match: {game_data['team_home']} vs {game_data['team_away']}")
                     st.write(f"Score: {game_data['score_home']} - {game_data['score_away']}")
+                    ticket_obj = Ticket(ticket_id="TemporaryID", matchups=ticket['matchups'], bets=ticket['bets']) # Replace "TemporaryID" with an actual ID if available
+                    ticket_obj.compute_outcome(game_data) # This updates the status of each bet
                 else:
-                    st.warning(f"No game data found for {team} in week {selected_week}.")
+                    st.warning(f"No game data found for {team1}.")
             except Exception as e:
                 st.error(f"Error: {str(e)}")
+
 
 # Debugging: Displaying Teams
 # st.write("Matchup Mapping")
