@@ -100,17 +100,23 @@ for i, ticket in enumerate(st.session_state.tickets):
 
     # Placeholder game data. This should come from your API call or some source of truth.
     game_data = {
-        "team_home": "Team A",
+        "team_home": "Baltimore Ravens",
         "score_home": 35,
-        "team_away": "Team B",
+        "team_away": "Cincinnati Bengals",
         "score_away": 30
     }
 
     for matchup, bet in zip(ticket['matchups'], ticket['bets']):
         status, delta = "Playing", None
         if bet['type'] == "Spread":
-            # Implement your logic here for the Spread bet type.
-            pass
+            if bet['type'] == "Spread":
+                if matchup.split(" vs ")[0] == game_data["team_home"]:
+                    delta = (game_data["score_home"] + bet['value']) - game_data["score_away"]
+                else:
+                    delta = (game_data["score_away"] + bet['value']) - game_data["score_home"]
+
+                status = "Covered" if delta > 0 else "Not Covered"
+
         elif bet['type'] == "Over/Under":
             total_score = game_data["score_home"] + game_data["score_away"]
             delta = total_score - bet['value']
