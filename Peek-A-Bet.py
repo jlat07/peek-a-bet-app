@@ -36,7 +36,8 @@ if 'tickets' not in st.session_state:
     
 #     return selected_week, selected_team, selected_bet_type, selected_value
 
-def get_user_input():
+def get_user_input(weeks, teams, bet_types, spread_values, over_under_values):
+
     # Select Week
     selected_week = st.selectbox('Select Week', list(matchup_mapping.keys()))
 
