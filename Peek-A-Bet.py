@@ -10,7 +10,7 @@ api_client = APIClient(api_key="YOUR_API_KEY", base_url="YOUR_BASE_URL")
 
 # Constants
 bet_types = ['Spread', 'Over/Under']
-spread_values = list(range(-10, 11))
+spread_values = list(range(-20, 20))
 over_under_values = list(range(30, 71))
 
 ### 1. Session State Adjustments
@@ -104,3 +104,9 @@ if st.button("Check Scores"):
 
     except Exception as e:
         st.error(f"Error: {str(e)}")
+
+
+        ## Debug
+        st.write("print teams")
+        st.write(teams)
+
