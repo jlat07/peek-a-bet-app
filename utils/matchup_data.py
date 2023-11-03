@@ -48,5 +48,12 @@ matchup_mapping = {
 
 
 weeks = list(matchup_mapping.keys())
-teams = list({team for week in matchup_mapping.values() for team in week['teams'].keys()})
+
+# Sort the matchups by the first team name alphabetically
+for week, data in matchup_mapping.items():
+    sorted_matchups = dict(sorted(data['teams'].items()))
+    data['teams'] = sorted_matchups
+
+# Then extract all unique team names and sort them
+teams = sorted(list({team for week in matchup_mapping.values() for team in week['teams'].keys()}))
 
