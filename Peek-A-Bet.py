@@ -24,21 +24,10 @@ if 'tickets' not in st.session_state:
     st.session_state.tickets = []
 
 #User Input Function
-# def get_user_input(weeks, teams, bet_types, spread_values, over_under_values):
-#     selected_week = st.selectbox('Select Week', weeks, key='select_week_key')
-#     selected_team = st.selectbox('Select Team', teams, key='select_team_key')
-#     selected_bet_type = st.selectbox('Bet Type', bet_types, key='select_bet_types_key')
-    
-#     if selected_bet_type == 'Spread':
-#         selected_value = st.selectbox('Select Spread', spread_values, key='select_spread_values_key')
-#     else:
-#         selected_value = st.selectbox('Select Over/Under Value', over_under_values, key='select_over_under_values_key')
-    
-#     return selected_week, selected_team, selected_bet_type, selected_value
+def get_user_input(weeks, teams, bet_types, spread_values, over_under_values):
 
-def get_user_input(selected_bet_type, spread_values, over_under_values):
     # Select Week
-    selected_week = st.selectbox('Select Week', list(matchup_mapping.keys()))
+    selected_week = st.selectbox('Select Week', weeks, key='select_week_key')
 
     # Select Team
     selected_team = st.selectbox('Select Team', sorted(matchup_mapping[selected_week]['teams'].keys()))
@@ -47,13 +36,6 @@ def get_user_input(selected_bet_type, spread_values, over_under_values):
     opponent_team = matchup_mapping[selected_week]['teams'][selected_team]
     st.write(f'Opponent: {opponent_team}')
 
-    # # Slider for Spread
-    # spread_slider = st.slider('Select Spread (Slider)', min_value=-50.0, max_value=50.0, value=0.0, step=0.5)
-    # st.write(f"You selected a spread of: {spread_slider}")
-
-    # # Input for Spread
-    # spread_input = st.number_input('Enter Spread (Input)', min_value=-50.0, max_value=50.0, value=0.0, step=0.5)
-    # st.write(f"You entered a spread of: {spread_input}")
 
     # # Slider for Over/Under
     # ou_slider = st.slider('Select Over/Under (Slider)', min_value=0.0, max_value=200.0, value=50.0, step=0.5)
@@ -66,16 +48,13 @@ def get_user_input(selected_bet_type, spread_values, over_under_values):
     selected_bet_type = st.selectbox('Bet Type', bet_types, key='select_bet_types_key')
     
     # Depending on the bet type, user selects a value
-    if selected_bet_type == "Spread":
-        selected_value = st.slider('Select Spread Value', min_value=min(spread_values), max_value=max(spread_values))
-    elif selected_bet_type == "Over/Under":
-        selected_value = st.slider('Select Over/Under Value', min_value=min(over_under_values), max_value=max(over_under_values))
-
-
-    # Depending on which input method (slider or input box) you decide to use,
-    # return the appropriate values for spread and over/under.
+  
+    if selected_bet_type == 'Spread':
+        selected_value = st.selectbox('Select Spread', spread_values, key='select_spread_values_key')
+    else:
+        selected_value = st.selectbox('Select Over/Under Value', over_under_values, key='select_over_under_values_key')
+    
     return selected_week, selected_team, selected_bet_type, selected_value
-
 
 
 ### 2. Modifying Bet Adding Logic
