@@ -1,4 +1,5 @@
 import requests
+from urllib.parse import quote
 from data_and_config import USE_MOCK_DATA, MOCK_GAME_DATA
 
 class APIClient:
@@ -10,17 +11,22 @@ class APIClient:
         try:
             if USE_MOCK_DATA:
                 return MOCK_GAME_DATA
-            # Construct the endpoint URL
-            endpoint_url = f"{self.base_url}/seasons/2023/weeks/{week}/events"
+
+            # Construct the endpoint URL with URL encoding for the week
+            endpoint_url = f"{self.base_url}/seasons/2023/weeks/{quote(week)}/events"
             headers = {
                 "Authorization": f"Bearer {self.api_key}"
             }
 
             # Make the API call
             response = requests.get(endpoint_url, headers=headers)
-            response.raise_for_status() 
+            response.raise_for_status()
 
             data = response.json()
+
+            # Ensure the "events" key is in the response
+            if "events" not in data:
+                raise ValueError("Invalid API response format: 'events' key missing.")
 
             # Extract the game data for the specified team
             for match in data["events"]:
@@ -31,7 +37,8 @@ class APIClient:
                         "score_home": match["result"]["score_home"],
                         "score_away": match["result"]["score_away"],
                     }
-            return None 
+            else:
+                raise ValueError(f"No match found for team {team} in week {week}.")
 
         except requests.ConnectionError:
             # Handle connection errors
