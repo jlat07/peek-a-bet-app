@@ -48,4 +48,4 @@ matchup_mapping = {
 
 
 weeks = list(matchup_mapping.keys())
-teams = list({team for week in matchup_mapping.values() for team in week.keys()})
+teams = list(set(team for matchups in matchup_mapping.values() for team in matchups.keys()))
