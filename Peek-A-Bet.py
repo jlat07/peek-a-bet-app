@@ -92,17 +92,18 @@ if st.button("Finalize Ticket"):
 
 # Display All Tickets
 
-tickets_data = []
 for i, ticket in enumerate(st.session_state.tickets):
+    st.subheader(f"Ticket ID: {i + 1}")
+    ticket_data = []
     for matchup, bet in zip(ticket['matchups'], ticket['bets']):
-        tickets_data.append({
-            'Ticket ID': i + 1,
+        ticket_data.append({
             "Matchup": matchup,
             "Bet Type": bet['type'],
             "Bet Value": bet['value'],
-            # Add other fields if necessary, such as "Status" once implemented
+            "Status": "Pending"  # Placeholder
         })
-st.table(tickets_data)
+    st.table(ticket_data)
+
 
 
 # Check Scores
