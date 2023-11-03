@@ -47,7 +47,7 @@ def get_user_input(weeks, bet_types, spread_values, over_under_values):
 
 # Function to Add Bet to Draft
 def add_bet_to_draft(selected_week, selected_team, selected_bet_type, selected_value):
-    opponent = matchup_mapping[selected_week].get(selected_team)
+    opponent = matchup_mapping[selected_week]['teams'][selected_team]
     if not opponent:
         st.warning(f"No matchup found for {selected_team} in {selected_week}.")
         return
