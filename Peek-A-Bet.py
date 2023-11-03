@@ -141,7 +141,7 @@ if st.button("Finalize Ticket"):
 #### OLD PEEK-A-BET Styling
 
 for ticket in st.session_state.tickets:
-    st.write(f"Ticket ID: {ticket['Ticket Id']}")  # Displaying ticket ID for reference
+    st.write(f"Ticket ID: ...")  # Displaying ticket ID for reference
     for matchup, bet in zip(ticket['matchups'], ticket['bets']):
         
         # Assuming the 'bet' dictionary contains a 'status' key. 
