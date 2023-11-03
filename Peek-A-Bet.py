@@ -92,53 +92,88 @@ if st.button("Finalize Ticket"):
 
 # Display All Tickets
 
-# Note: This assumes you already have a function or method that checks the ticket's outcome based on game data.
+# # Note: This assumes you already have a function or method that checks the ticket's outcome based on game data.
 
-for i, ticket in enumerate(st.session_state.tickets):
-    st.subheader(f"Ticket ID: {i + 1}")
-    ticket_data = []
+# for i, ticket in enumerate(st.session_state.tickets):
+#     st.subheader(f"Ticket ID: {i + 1}")
+#     ticket_data = []
 
-    # Placeholder game data. This should come from your API call or some source of truth.
-    game_data = {
-        "team_home": "Baltimore Ravens",
-        "score_home": 35,
-        "team_away": "Cincinnati Bengals",
-        "score_away": 30
-    }
+#     # Placeholder game data. This should come from your API call or some source of truth.
+#     game_data = {
+#         "team_home": "Baltimore Ravens",
+#         "score_home": 35,
+#         "team_away": "Cincinnati Bengals",
+#         "score_away": 30
+#     }
 
+#     for matchup, bet in zip(ticket['matchups'], ticket['bets']):
+#         status, delta = "Playing", None
+#         if bet['type'] == "Spread":
+#             if bet['type'] == "Spread":
+#                 if matchup.split(" vs ")[0] == game_data["team_home"]:
+#                     delta = (game_data["score_home"] + bet['value']) - game_data["score_away"]
+#                 else:
+#                     delta = (game_data["score_away"] + bet['value']) - game_data["score_home"]
+
+#                 status = "Covered" if delta > 0 else "Not Covered"
+
+#         elif bet['type'] == "Over/Under":
+#             total_score = game_data["score_home"] + game_data["score_away"]
+#             delta = total_score - bet['value']
+#             if delta > 0:
+#                 status = "Over"
+#             else:
+#                 status = "Under"
+
+#         status_color = "green" if status in ["Over", "Under"] else "red"
+#         status_md = f"<span style='color:{status_color}'>{status}</span>"
+
+#         ticket_data.append({
+#             "Matchup": matchup,
+#             "Bet Type": bet['type'],
+#             "Bet Value": bet['value'],
+#             "Status": status_md,
+#             "Delta": delta
+#         })
+
+#     st.table(ticket_data)
+
+#### OLD PEEK-A-BET Styling
+
+for ticket in st.session_state.tickets:
+    st.write(f"Ticket ID: {ticket['ticket_id']}")  # Displaying ticket ID for reference
     for matchup, bet in zip(ticket['matchups'], ticket['bets']):
-        status, delta = "Playing", None
-        if bet['type'] == "Spread":
-            if bet['type'] == "Spread":
-                if matchup.split(" vs ")[0] == game_data["team_home"]:
-                    delta = (game_data["score_home"] + bet['value']) - game_data["score_away"]
-                else:
-                    delta = (game_data["score_away"] + bet['value']) - game_data["score_home"]
+        
+        # Assuming the 'bet' dictionary contains a 'status' key. 
+        # This status can be 'win', 'lose', 'pending', etc.
+        # Replace with actual logic or data structure if different
+        status = bet.get('status', 'pending')
 
-                status = "Covered" if delta > 0 else "Not Covered"
+        status_color = "gray"
+        border_style = "none"
+        
+        if status == "win":
+            status_color = "green"
+            border_style = "2px solid black"
+        elif status == "lose":
+            status_color = "red"
+            border_style = "2px solid black"
 
-        elif bet['type'] == "Over/Under":
-            total_score = game_data["score_home"] + game_data["score_away"]
-            delta = total_score - bet['value']
-            if delta > 0:
-                status = "Over"
-            else:
-                status = "Under"
-
-        status_color = "green" if status in ["Over", "Under"] else "red"
-        status_md = f"<span style='color:{status_color}'>{status}</span>"
-
-        ticket_data.append({
-            "Matchup": matchup,
-            "Bet Type": bet['type'],
-            "Bet Value": bet['value'],
-            "Status": status_md,
-            "Delta": delta
-        })
-
-    st.table(ticket_data)
-
-
+        col1, col2, col3, col4 = st.columns([3, 2, 2, 1])  # Adjust the column widths as per your needs
+        
+        with col1:
+            st.write(matchup)  # e.g. "Team A vs Team B"
+        
+        with col2:
+            st.write(bet['type'])  # e.g. "Spread" or "Over/Under"
+        
+        with col3:
+            st.write(bet['value'])  # e.g. "+5" or "50"
+        
+        with col4:
+            st.markdown(f"<div style='background-color: {status_color}; border: {border_style}; padding: 10px;'>{status.capitalize()}</div>", unsafe_allow_html=True)
+        
+    st.write("---")  # A separator line after each ticket for better clarity
 
 
 # Check Scores
