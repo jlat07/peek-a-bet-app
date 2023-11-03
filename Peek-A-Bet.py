@@ -13,51 +13,39 @@ bet_types = ['Spread', 'Over/Under']
 spread_values = list(range(-20, 20))
 over_under_values = list(range(30, 71))
 
-### 1. Session State Adjustments
+# Setup Session State
 if 'draft_ticket' not in st.session_state:
     st.session_state.draft_ticket = {
         'matchups': [],
         'bets': []
     }
-
 if 'tickets' not in st.session_state:
     st.session_state.tickets = []
 
-#User Input Function
-def get_user_input(weeks, teams, bet_types, spread_values, over_under_values):
-
+# User Input Function
+def get_user_input(weeks, bet_types, spread_values, over_under_values):
     # Select Week
-    selected_week = st.selectbox('Select Week', weeks, key='select_week_key')
+    selected_week = st.selectbox('Select Week', weeks)
 
     # Select Team
     selected_team = st.selectbox('Select Team', sorted(matchup_mapping[selected_week]['teams'].keys()))
 
-    # Opponent team (displayed for user's information)
+    # Opponent team
     opponent_team = matchup_mapping[selected_week]['teams'][selected_team]
     st.write(f'Opponent: {opponent_team}')
 
-
-    # # Slider for Over/Under
-    # ou_slider = st.slider('Select Over/Under (Slider)', min_value=0.0, max_value=200.0, value=50.0, step=0.5)
-    # st.write(f"You selected an Over/Under of: {ou_slider}")
-
-    # # Input for Over/Under
-    # ou_input = st.number_input('Enter Over/Under (Input)', min_value=0.0, max_value=200.0, value=50.0, step=0.5)
-    # st.write(f"You entered an Over/Under of: {ou_input}")
-
-    selected_bet_type = st.selectbox('Bet Type', bet_types, key='select_bet_types_key')
+    # Select Bet Type
+    selected_bet_type = st.selectbox('Bet Type', bet_types)
     
-    # Depending on the bet type, user selects a value
-  
+    # Select Bet Value
     if selected_bet_type == 'Spread':
-        selected_value = st.selectbox('Select Spread', spread_values, key='select_spread_values_key')
+        selected_value = st.selectbox('Select Spread', spread_values)
     else:
-        selected_value = st.selectbox('Select Over/Under Value', over_under_values, key='select_over_under_values_key')
+        selected_value = st.selectbox('Select Over/Under Value', over_under_values)
     
     return selected_week, selected_team, selected_bet_type, selected_value
 
-
-### 2. Modifying Bet Adding Logic
+# Function to Add Bet to Draft
 def add_bet_to_draft(selected_week, selected_team, selected_bet_type, selected_value):
     opponent = matchup_mapping[selected_week].get(selected_team)
     if not opponent:
@@ -70,7 +58,7 @@ def add_bet_to_draft(selected_week, selected_team, selected_bet_type, selected_v
         'value': selected_value
     })
 
-### 3. Finalizing a Ticket
+# Function to Finalize a Ticket
 def finalize_ticket():
     num_bets = len(st.session_state.draft_ticket['bets'])
     if 3 <= num_bets <= 10:
@@ -84,13 +72,12 @@ def finalize_ticket():
 
 # UI Elements and Logic
 st.subheader("Peek-A-Bet")
-selected_week, selected_team, selected_bet_type, selected_value = get_user_input(selected_bet_types, spread_values, over_under_values)
+selected_week, selected_team, selected_bet_type, selected_value = get_user_input(weeks, bet_types, spread_values, over_under_values)
 
-
+# Add Bet Button
 if st.button("Add Bet"):
     add_bet_to_draft(selected_week, selected_team, selected_bet_type, selected_value)
 
-### 4. Display Draft Ticket and Finalized Tickets
 # Display Draft Ticket
 st.subheader("Draft Ticket")
 for i, (matchup, bet) in enumerate(zip(st.session_state.draft_ticket['matchups'], st.session_state.draft_ticket['bets'])):
@@ -99,36 +86,28 @@ for i, (matchup, bet) in enumerate(zip(st.session_state.draft_ticket['matchups']
         del st.session_state.draft_ticket['matchups'][i]
         del st.session_state.draft_ticket['bets'][i]
 
+# Finalize Ticket Button
 if st.button("Finalize Ticket"):
     finalize_ticket()
 
+# Display All Tickets
 tickets_data = [{'Ticket ID': i + 1, "Matchups": ', '.join(ticket['matchups']), "Bets": ', '.join([f"{bet['type']} {bet['value']}" for bet in ticket['bets']])} for i, ticket in enumerate(st.session_state.tickets)]
 st.table(tickets_data)
 
-# Check Scores Button and Logic
+# Check Scores
 st.write("Check Ticket Status")
 if st.button("Check Scores"):
+    # For now, this checks the most recently selected team and week, but this can be modified
     try:
-        # Accessing the saved values from session state
-        selected_week = st.session_state.user_input[0]
-        selected_team = st.session_state.user_input[1]
-
         game_data = api_client.get_game_data(team=selected_team, week=selected_week)
-        
         if game_data:
             st.write(f"Match: {game_data['team_home']} vs {game_data['team_away']}")
             st.write(f"Score: {game_data['score_home']} - {game_data['score_away']}")
-            st.write(f"Ticket Status: Green (This is just an example. Replace with actual logic.)")
-            st.write(f"Score Delta: +4 (Again, an example. Replace with actual logic.)")
-            
         else:
             st.warning(f"No game data found for {selected_team} in week {selected_week}.")
-
     except Exception as e:
         st.error(f"Error: {str(e)}")
 
-
-## Debug
-st.write("print teams")
+# Debugging: Displaying Teams
+st.write("Teams:")
 st.write(teams)
-
