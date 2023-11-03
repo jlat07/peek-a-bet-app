@@ -36,7 +36,7 @@ if 'tickets' not in st.session_state:
     
 #     return selected_week, selected_team, selected_bet_type, selected_value
 
-def get_user_input(selected_week, selected_team, selected_bet_type, selected_value):
+def get_user_input(selected_bet_types, spread_values, over_under_values):
     # Select Week
     selected_week = st.selectbox('Select Week', list(matchup_mapping.keys()))
 
@@ -44,8 +44,8 @@ def get_user_input(selected_week, selected_team, selected_bet_type, selected_val
     selected_team = st.selectbox('Select Team', sorted(matchup_mapping[selected_week]['teams'].keys()))
 
     # Opponent team (displayed for user's information)
-    # opponent_team = matchup_mapping[selected_week]['teams'][selected_team]
-    # st.write(f'Opponent: {opponent_team}')
+    opponent_team = matchup_mapping[selected_week]['teams'][selected_team]
+    st.write(f'Opponent: {opponent_team}')
 
     # # Slider for Spread
     # spread_slider = st.slider('Select Spread (Slider)', min_value=-50.0, max_value=50.0, value=0.0, step=0.5)
@@ -65,14 +65,17 @@ def get_user_input(selected_week, selected_team, selected_bet_type, selected_val
 
     selected_bet_type = st.selectbox('Bet Type', bet_types, key='select_bet_types_key')
     
-    if selected_bet_type == 'Spread':
-        selected_value = st.selectbox('Select Spread', spread_values, key='select_spread_values_key')
-    else:
-        selected_value = st.selectbox('Select Over/Under Value', over_under_values, key='select_over_under_values_key')
+    # Depending on the bet type, user selects a value
+    if selected_bet_type == "Spread":
+        selected_value = st.slider('Select Spread Value', min_value=min(spread_values), max_value=max(spread_values))
+    elif selected_bet_type == "Over/Under":
+        selected_value = st.slider('Select Over/Under Value', min_value=min(over_under_values), max_value=max(over_under_values))
+
 
     # Depending on which input method (slider or input box) you decide to use,
     # return the appropriate values for spread and over/under.
     return selected_week, selected_team, selected_bet_type, selected_value
+
 
 
 ### 2. Modifying Bet Adding Logic
@@ -102,7 +105,8 @@ def finalize_ticket():
 
 # UI Elements and Logic
 st.subheader("Peek-A-Bet")
-selected_week, selected_team, selected_bet_type, selected_value = get_user_input(weeks, teams, bet_types, spread_values, over_under_values)
+selected_week, selected_team, selected_bet_type, selected_value = get_user_input(selected_bet_types, spread_values, over_under_values)
+
 
 if st.button("Add Bet"):
     add_bet_to_draft(selected_week, selected_team, selected_bet_type, selected_value)
