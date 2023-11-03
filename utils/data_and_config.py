@@ -10,7 +10,7 @@ over_under_values = list(range(30, 71))
 
 
 # Mock data
-mock_game_data = {
+MOCK_GAME_DATA = {
     'Week 1': {
         'Detroit Lions vs Kansas City Chiefs': {
             'team_home': 'Detroit Lions',
