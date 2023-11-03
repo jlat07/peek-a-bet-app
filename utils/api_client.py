@@ -1,6 +1,6 @@
 import requests
 from urllib.parse import quote
-from data_and_config import USE_MOCK_DATA, MOCK_GAME_DATA
+from utils.data_and_config import USE_MOCK_DATA, MOCK_GAME_DATA
 
 class APIClient:
     def __init__(self, api_key, base_url="https://api.sportsopendata.net/v1/nfl"):
