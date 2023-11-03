@@ -1,5 +1,6 @@
 import streamlit as st
 from utils.ticket import Ticket
+from utils.matchup_data import matchup_mapping, weeks, teams
 from utils.ticket_manager import TicketManager
 from utils.api_client import APIClient
 
@@ -8,13 +9,6 @@ ticket_manager = TicketManager()
 api_client = APIClient(api_key="YOUR_API_KEY", base_url="YOUR_BASE_URL")
 
 # Constants
-matchup_mapping = {
-    'Week 1': {'Team A': 'Team B', 'Team C': 'Team D'},
-    'Week 2': {'Team A': 'Team C', 'Team B': 'Team D'},
-    # ... [Add more weeks as needed]
-}
-weeks = ['Week 1', 'Week 2', 'Week 3']
-teams = ['Team A', 'Team B', 'Team C', 'Team D']
 bet_types = ['Spread', 'Over/Under']
 spread_values = list(range(-10, 11))
 over_under_values = list(range(30, 71))
