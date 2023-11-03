@@ -1,5 +1,14 @@
 from datetime import date
 
+
+# Constants
+bet_types = ['Spread', 'Over/Under']
+spread_values = list(range(-20, 20))
+over_under_values = list(range(30, 71))
+
+
+
+# Data
 matchup_mapping = {
     'Week 1': {
         'teams': {

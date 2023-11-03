@@ -1,17 +1,12 @@
 import streamlit as st
 from utils.ticket import Ticket
-from utils.matchup_data import matchup_mapping, weeks, teams
+from utils.data_and_config import matchup_mapping, weeks, teams
 from utils.ticket_manager import TicketManager
 from utils.api_client import APIClient
 
 # Initialize Ticket Manager and API Client
 ticket_manager = TicketManager()
 api_client = APIClient(api_key="YOUR_API_KEY", base_url="YOUR_BASE_URL")
-
-# Constants
-bet_types = ['Spread', 'Over/Under']
-spread_values = list(range(-20, 20))
-over_under_values = list(range(30, 71))
 
 # Setup Session State
 if 'draft_ticket' not in st.session_state:
