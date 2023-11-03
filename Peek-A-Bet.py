@@ -212,26 +212,40 @@ for ticket in st.session_state.tickets:
     bets = ticket['bets']
     
     for matchup, bet in zip(matchups, bets):
+        # Get the game data based on the matchup
+        teams = matchup.split(" vs ")
+        game_data = api_client.get_game_data(teams[0], selected_week)
+        
+        # Default to gray (0-0 score)
         status_color = "gray"
         border_style = "none"
         
-        if bet["status"] == "win":
-            status_color = "green"
+        # Check if there's a score
+        if game_data and game_data['score_home'] != 0 and game_data['score_away'] != 0:
+            # Evaluate the bet condition here and update status_color
+            # This is a placeholder, and the actual evaluation will depend on your bet's conditions.
+            if bet["type"] == "Spread":
+                # Example for Spread
+                if game_data['score_home'] + bet['value'] > game_data['score_away']:
+                    status_color = "green"
+                else:
+                    status_color = "red"
+            elif bet["type"] == "Over/Under":
+                # Example for Over/Under
+                if game_data['score_home'] + game_data['score_away'] > bet['value']:
+                    status_color = "green"
+                else:
+                    status_color = "red"
             border_style = "2px solid black"
-        elif bet["status"] == "lose":
-            status_color = "red"
-            border_style = "2px solid black"
-        
-        col1, col2, col3, col4 = st.columns([2,1,1,1])
+
+        col1, col2, col3 = st.columns(3)
         with col1:
             st.write(matchup)
         with col2:
             st.write(f"{bet['type']} {bet['value']}")
         with col3:
-            st.write(bet["condition"])  # Assuming you have this key. If not, replace appropriately.
-        with col4:
-            st.markdown(f"<div style='background-color: {status_color}; border: {border_style}; padding: 10px;'>{bet['status'].capitalize()}</div>", unsafe_allow_html=True)
-            
+            st.markdown(f"<div style='background-color: {status_color}; border: {border_style}; padding: 10px;'>Status</div>", unsafe_allow_html=True)
+
     st.write("---")  # Separator after each ticket
 
 
