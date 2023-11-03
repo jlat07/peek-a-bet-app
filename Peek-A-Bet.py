@@ -23,7 +23,7 @@ if 'draft_ticket' not in st.session_state:
 if 'tickets' not in st.session_state:
     st.session_state.tickets = []
 
-User Input Function
+#User Input Function
 def get_user_input(weeks, teams, bet_types, spread_values, over_under_values):
     selected_week = st.selectbox('Select Week', weeks, key='select_week_key')
     selected_team = st.selectbox('Select Team', teams, key='select_team_key')
