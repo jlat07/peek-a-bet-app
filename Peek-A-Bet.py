@@ -141,7 +141,7 @@ if st.button("Finalize Ticket"):
 #### OLD PEEK-A-BET Styling
 
 for ticket in st.session_state.tickets:
-    st.write(f"Ticket ID: {ticket['ticket_id']}")  # Displaying ticket ID for reference
+    st.write(f"Ticket ID: {ticket['Ticket Id']}")  # Displaying ticket ID for reference
     for matchup, bet in zip(ticket['matchups'], ticket['bets']):
         
         # Assuming the 'bet' dictionary contains a 'status' key. 
@@ -174,6 +174,48 @@ for ticket in st.session_state.tickets:
             st.markdown(f"<div style='background-color: {status_color}; border: {border_style}; padding: 10px;'>{status.capitalize()}</div>", unsafe_allow_html=True)
         
     st.write("---")  # A separator line after each ticket for better clarity
+
+
+### 3rd times a charm
+
+...
+
+# Existing code above...
+
+### Display Finalized Tickets with Enhanced Styling ###
+
+# st.subheader("Finalized Tickets")
+
+# for ticket in st.session_state.tickets:
+#     st.markdown(f"### Ticket ID: {ticket['Ticket ID']} ###")
+    
+#     # Extract the matchups and bets from the ticket
+#     matchups = ticket['Matchups'].split(", ")
+#     bets = ticket['Bets']
+    
+#     for matchup, bet in zip(matchups, bets):
+#         status_color = "gray"
+#         border_style = "none"
+        
+#         if bet["status"] == "win":
+#             status_color = "green"
+#             border_style = "2px solid black"
+#         elif bet["status"] == "lose":
+#             status_color = "red"
+#             border_style = "2px solid black"
+        
+#         col1, col2, col3, col4 = st.columns([2,1,1,1])
+#         with col1:
+#             st.write(matchup)
+#         with col2:
+#             st.write(f"{bet['type']} {bet['value']}")
+#         with col3:
+#             st.write(bet["condition"])  # Assuming you have this key. If not, replace appropriately.
+#         with col4:
+#             st.markdown(f"<div style='background-color: {status_color}; border: {border_style}; padding: 10px;'>{bet['status'].capitalize()}</div>", unsafe_allow_html=True)
+            
+#     st.write("---")  # Separator after each ticket
+
 
 
 # Check Scores
