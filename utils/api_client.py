@@ -1,4 +1,5 @@
 import requests
+from data_and_config import USE_MOCK_DATA, MOCK_GAME_DATA
 
 class APIClient:
     def __init__(self, api_key, base_url="https://api.sportsopendata.net/v1/nfl"):
@@ -7,6 +8,8 @@ class APIClient:
 
     def get_game_data(self, team, week):
         try:
+            if USE_MOCK_DATA:
+                return MOCK_GAME_DATA
             # Construct the endpoint URL
             endpoint_url = f"{self.base_url}/seasons/2023/weeks/{week}/events"
             headers = {

@@ -1,10 +1,50 @@
 from datetime import date
 
+# Settings
+USE_MOCK_DATA = True  # Set to False to use live API data
 
 # Constants
 bet_types = ['Spread', 'Over/Under']
 spread_values = list(range(-20, 20))
 over_under_values = list(range(30, 71))
+
+
+# Mock data
+mock_game_data = {
+    'Week 1': {
+        'Detroit Lions vs Kansas City Chiefs': {
+            'team_home': 'Detroit Lions',
+            'score_home': 24,
+            'team_away': 'Kansas City Chiefs',
+            'score_away': 27
+        },
+        'Carolina Panthers vs Atlanta Falcons': {
+            'team_home': 'Carolina Panthers',
+            'score_home': 17,
+            'team_away': 'Atlanta Falcons',
+            'score_away': 20
+        },
+        'Houston Texans vs Baltimore Ravens': {
+            'team_home': 'Houston Texans',
+            'score_home': 14,
+            'team_away': 'Baltimore Ravens',
+            'score_away': 28
+        },
+        # ... continue for all matchups ...
+        'Dallas Cowboys vs New York Giants': {
+            'team_home': 'Dallas Cowboys',
+            'score_home': 31,
+            'team_away': 'New York Giants',
+            'score_away': 17
+        },
+        'Bills vs Jets': {
+            'team_home': 'Bills',
+            'score_home': 23,
+            'team_away': 'Jets',
+            'score_away': 16
+        }
+    },
+}
 
 
 
