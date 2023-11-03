@@ -302,3 +302,4 @@ if st.button("Check Scores"):
 # st.write("Weeks")
 # st.write(weeks)
 st.write(st.session_state.tickets)
+st.write(f"Debug: {game_data}")
