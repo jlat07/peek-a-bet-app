@@ -1,6 +1,6 @@
 import streamlit as st
 from utils.ticket import Ticket
-from utils.data_and_config import matchup_mapping, weeks, teams
+from utils.data_and_config import matchup_mapping, weeks, teams, bet_types
 from utils.ticket_manager import TicketManager
 from utils.api_client import APIClient
 
