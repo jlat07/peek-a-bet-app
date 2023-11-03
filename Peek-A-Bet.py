@@ -83,10 +83,11 @@ if st.button("Add Bet"):
 
 # Display Draft Ticket
 st.subheader("Draft Ticket")
-for i, (matchup, bet) in enumerate(zip(st.session_state.draft_ticket['matchups'], st.session_state.draft_ticket['bets'])):
+for matchup, bet in zip(st.session_state.draft_ticket['matchups'], st.session_state.draft_ticket['bets']):
     st.write(f"{matchup} - {bet['type']} {bet['value']}")
-    if st.button(f"Remove Bet {i+1}"):
-        st.session_state.draft_ticket['matchups'].pop(i)
+    # Button label includes the unique ID
+    if st.button(f"Remove Bet {bet['id']}"):
+        st.session_state.draft_ticket['matchups'].remove(matchup)
         st.session_state.draft_ticket['bets'] = [b for b in st.session_state.draft_ticket['bets'] if b['id'] != bet['id']]
 
 # Finalize Ticket Button
