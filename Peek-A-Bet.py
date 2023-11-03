@@ -79,18 +79,34 @@ selected_week, selected_team, selected_bet_type, selected_value = get_user_input
 if st.button("Add Bet"):
     add_bet_to_draft(selected_week, selected_team, selected_bet_type, selected_value)
 
+
+# Initialization of Delete Button List
+if 'draft_ticket' not in st.session_state:
+    st.session_state.draft_ticket = {"matchups": [], "bets": []}
+
+if 'delete_buttons' not in st.session_state:
+    st.session_state.delete_buttons = [False] * len(st.session_state.draft_ticket['bets'])
+
+
 # Display Draft Ticket
 st.subheader("Draft Ticket")
-
 for i, (matchup, bet) in enumerate(zip(st.session_state.draft_ticket['matchups'], st.session_state.draft_ticket['bets'])):
-    col1, col2 = st.columns([4, 1])
-    with col1:
-        st.write(f"{matchup} - {bet['type']} {bet['value']}")
-    with col2:
-        if st.button(f"Remove {i}", key=f"btn_{i}"):
-            st.session_state.draft_ticket['matchups'].pop(i)
-            st.session_state.draft_ticket['bets'].pop(i)
-            break  # Break after removal to avoid iteration errors
+    st.write(f"{matchup} - {bet['type']} {bet['value']}")
+    # The button is bound to a specific slot in the session state list
+    if st.button(f"Remove Bet {i+1}"):
+        st.session_state.delete_buttons[i] = True
+
+# Handle bet deletions after displaying them all
+for i, delete_clicked in reversed(list(enumerate(st.session_state.delete_buttons))):
+    if delete_clicked:
+        del st.session_state.draft_ticket['matchups'][i]
+        del st.session_state.draft_ticket['bets'][i]
+        st.session_state.delete_buttons[i] = False  # Reset the button state
+
+# Reset the delete_buttons list length to match the number of current bets
+st.session_state.delete_buttons = [False] * len(st.session_state.draft_ticket['bets'])
+
+
 
 # Finalize Ticket Button
 if st.button("Finalize Ticket"):
