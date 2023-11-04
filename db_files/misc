@@ -1,0 +1,112 @@
+-- DB SQL Statements
+-- Modified Users Table (Unchanged, just for reference)
+CREATE TABLE Users (
+    user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Modified Bets Table
+CREATE TABLE Bets (
+    bet_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES Users(user_id),
+    game_id UUID REFERENCES Games(game_id),
+    condition TEXT NOT NULL,
+    amount DECIMAL,
+    status VARCHAR(50) CHECK (status IN ('Pending', 'Won', 'Lost')) DEFAULT 'Pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Modified Bets Table
+CREATE TABLE Bets (
+    bet_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES Users(user_id),
+    game_id UUID REFERENCES Games(game_id),
+    condition TEXT NOT NULL,
+    amount DECIMAL,
+    status VARCHAR(50) CHECK (status IN ('Pending', 'Won', 'Lost')) DEFAULT 'Pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Real-time Scores Table (Unchanged, just for reference)
+CREATE TABLE RealTimeScores (
+    score_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    game_id UUID REFERENCES Games(game_id),
+    team1_score INT,
+    team2_score INT,
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Delta Updates Table (Optional, based on whether you wish to track differential data)
+CREATE TABLE DeltaUpdates (
+    delta_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    game_id UUID REFERENCES Games(game_id),
+    team1_score_diff INT DEFAULT 0,
+    team2_score_diff INT DEFAULT 0,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--Privous DB Tables, new ones are above
+
+
+-- Users Table
+CREATE TABLE Users (
+    user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Games Table
+CREATE TABLE Games (
+    game_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    team1 VARCHAR(255) NOT NULL,
+    team2 VARCHAR(255) NOT NULL,
+    date DATE,
+    time TIME
+);
+
+-- Bets Table
+CREATE TABLE Bets (
+    bet_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES Users(user_id),
+    game_id UUID REFERENCES Games(game_id),
+    condition TEXT NOT NULL,
+    amount DECIMAL,
+    status VARCHAR(50) CHECK (status IN ('Pending', 'Won', 'Lost'))
+);
+
+-- Real-time Scores Table
+CREATE TABLE RealTimeScores (
+    score_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    game_id UUID REFERENCES Games(game_id),
+    team1_score INT,
+    team2_score INT,
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+
+-- API To get Game schedule

@@ -3,3 +3,9 @@ numpy
 pandas
 pydeck
 streamlit
+supabase-py
+gotrue
+postgrest-py
+pytest
+realtime-py
+requests
