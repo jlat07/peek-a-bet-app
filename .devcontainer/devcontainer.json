@@ -29,5 +29,12 @@
   },
   "forwardPorts": [
     8501
-  ]
+  ],
+
+  "containerEnv": {
+    "SUPABASE_URL": "https://ktwdnfxluyzjvararnry.supabase.co",
+    "SUPABASE_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt0d2RuZnhsdXl6anZhcmFybnJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTkwNjI3MTQsImV4cCI6MjAxNDYzODcxNH0.YMeUetY3CVN-I5_GDu2jv2o190XXX5eKqa2vaXhoUMY",
+    "NFL_API_BASE_URL": "https://api.sportsdata.io/v3/nfl/scores/json/ScoresBasic",
+    "NFL_API_KEY": "edadf2ee6ab24f4083fd64606859c27c"
+  }
 }
