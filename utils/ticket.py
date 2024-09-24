@@ -1,8 +1,8 @@
 class Ticket:
     def __init__(self, ticket_id, matchups, bets):
         self.ticket_id = ticket_id
-        self.matchups = matchups
-        self.bets = bets
+        self.matchups = matchups  # List of matchup strings
+        self.bets = bets          # List of bet dictionaries
 
     def display(self):
         bet_str = ', '.join([f"{bet['type']} {bet['value']}" for bet in self.bets])
@@ -15,27 +15,50 @@ class Ticket:
             raise ValueError("Bets should not be empty!")
         # Add other validation rules if necessary
 
-    def compute_outcome(self, game_data):
-        for bet in self.bets:
-            bet_type = bet["type"]
+    def compute_outcome(self, game_scores):
+        for i, bet in enumerate(self.bets):
+            bet_type = bet["type"].lower()
             bet_value = float(bet["value"])
-            
-            if game_data["score_home"] == 0 and game_data["score_away"] == 0:
+            matchup = self.matchups[i]
+
+            # Extract the corresponding game score
+            game_score = game_scores.get(matchup)
+            if not game_score:
                 bet["status"] = "pending"
                 continue
-            
+
+            # Check if the game is completed
+            if not game_score['completed']:
+                bet["status"] = "pending"
+                continue
+
+            # Get scores
+            home_team = game_score['home_team']
+            away_team = game_score['away_team']
+            home_score = game_score['home_score']
+            away_score = game_score['away_score']
+
+            # Compute outcome
             if bet_type == "spread":
-                if self.matchups[0] == game_data["team_home"]:
-                    delta = game_data["score_home"] - game_data["score_away"] + bet_value
+                selected_team = bet['team']
+                if selected_team == home_team:
+                    adjusted_score = home_score + bet_value
+                    opponent_score = away_score
+                elif selected_team == away_team:
+                    adjusted_score = away_score + bet_value
+                    opponent_score = home_score
                 else:
-                    delta = game_data["score_away"] - game_data["score_home"] - bet_value
+                    bet["status"] = "invalid team"
+                    continue
 
-                bet["delta"] = delta
-                bet["status"] = "win" if delta > 0 else "lose"
+                bet["status"] = "win" if adjusted_score > opponent_score else "lose"
 
-            elif bet_type == "over_under":
-                total_score = game_data["score_home"] + game_data["score_away"]
-                delta = total_score - bet_value
-
-                bet["delta"] = delta
-                bet["status"] = "win" if (delta > 0 and bet_value == "over") or (delta < 0 and bet_value == "under") else "lose"
+            elif bet_type == "over/under":
+                total_score = home_score + away_score
+                over_under_choice = bet['over_under']
+                if over_under_choice == 'Over':
+                    bet["status"] = "win" if total_score > bet_value else "lose"
+                else:
+                    bet["status"] = "win" if total_score < bet_value else "lose"
+            else:
+                bet["status"] = "pending"

@@ -8,3 +8,4 @@ postgrest
 pytest
 realtime-py
 requests
+streamlit-autorefresh
