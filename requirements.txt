@@ -3,10 +3,8 @@ numpy
 pandas
 pydeck
 streamlit
-supabase-py
-gotrue
+supabase
 postgrest
 pytest
 realtime-py
 requests
-supabase
